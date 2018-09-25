@@ -1,14 +1,100 @@
-\documentclass{article}
-\usepackage[utf8]{inputenc}
-
-\title{MECH-325-Assignments}
-\author{donney.fan }
-\date{September 2018}
+\documentclass[letterpaper,12pt]{article}
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage[paper=letterpaper,left=25mm,right=25mm,top=25mm,bottom=25mm]{geometry}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{newtxtext,newtxmath}
 
 \begin{document}
-
-\maketitle
-
-\section{Introduction}
-
+	
+	\begin{titlepage}
+		
+		\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+		
+		\center
+		
+		\textsc{\LARGE University of British Columbia}\\[1.5cm]
+		\textsc{\Large MECH 325 - Mechanical Design I}\\[0.5cm]
+		\textsc{\Large Assignment 1}\\[0.5cm]
+		
+		\HRule \\[0.8cm]
+		{ \huge \bfseries Gear Train Design}\\[0.4cm]
+		\HRule \\[1cm]
+		
+		{\Large GROUP C2}\\
+		\vspace{0.5cm}
+		
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				\emph{Team Member:}\\
+				Kota Chang\\
+				Chuan Du\\
+				Donney Fan\\
+				Dvir Hilu\\
+				Michael Ko\\
+				Priyansh Malik\\
+				Darren Tong\\
+			\end{flushleft}
+		\end{minipage}
+		~
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{Student Number:} \\
+				12345678\\
+				12345678\\
+				12345678\\
+				12345678\\
+				12345678\\
+				12345678\\
+				12345678
+			\end{flushright}
+		\end{minipage}\\[2cm]
+		
+		{\large \today}\\[2cm]
+		
+		{\large
+			Velocity = 12345 mm/sec\\
+			Cost = \$1245\\
+			Performance Metric = 12345 mm/\$s
+		}
+		
+		%\includegraphics{logo.png}\\[1cm]
+		
+		\vfill % Fill the rest of the page with whitespace
+		
+	\end{titlepage}
+	
+	\section{Summary}
+	
+	\newpage
+	
+	\section{Appendix}
+	
+	\subsection{Power Screw Analysis}
+	
+	The objective of this section is to find the minimum required torque and rotational speed needed to lift the 2500kg load at 4 mm/sec.
+	
+	The torque required to lift a load with gravitational force $F$ is:
+	
+	\begin{equation}
+	\tau = \frac{Fd_m}{2}\left(\frac{l+\pi f d_m}{\pi d_m - fl}\right)
+	\end{equation}
+	
+	\begin{center}
+		\begin{tabular}{ |p{2cm}||p{3cm}|p{2cm}|p{7cm}|  }
+			\hline
+			\multicolumn{4}{|c|}{Parameters} \\
+			\hline
+			Symbol& Value & Units & Description\\
+			\hline
+			$F$ & $2500 \times 9.81$ & N & Axial compressive force\\
+			$d_m$ & 57 & mm   & Mean diameter\\
+			$l$ & 6 & mm &  Pitch\\
+			$f$ & 0.08 & N/A & Friction Coefficient\\
+			\hline
+		\end{tabular}
+	\end{center}
+	
 \end{document}
