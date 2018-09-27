@@ -1,0 +1,32 @@
+[
+  {
+    "number": "5172T21",
+    "url": "https://www.mcmaster.com/5172t21",
+    "units": "Imperial",
+    "pitch": 16,
+    "teeth": 16,
+    "pitch_diameter": 1,
+    "OD": 1.13,
+    "face_width": 0.75,
+    "material": "1020 Carbon Steel",
+    "cost": 23.1,
+    "overload_factor": 1,
+    "lewis_form_factor": 0.296,
+    "temperature_factor": 1
+  },
+  {
+    "number": "2272839",
+    "url": "https://www.mscdirect.com/product/details/02272839",
+    "units": "Imperial",
+    "pitch": 16,
+    "teeth": 36,
+    "pitch_diameter": 2.25,
+    "OD": 0,
+    "face_width": 0.75,
+    "material": "Steel",
+    "cost": 81.46,
+    "overload_factor": 1,
+    "lewis_form_factor": 0.296,
+    "temperature_factor": 1
+  }
+]
