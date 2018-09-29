@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage{newtxtext,newtxmath}
+\usepackage{pgfplots}
 
 \begin{document}
 	
@@ -74,7 +75,7 @@
 	
 	\subsection{Power Screw Analysis}
 	
-	The objective of this section is to find the minimum required torque and rotational speed needed to lift the 2500kg load at 4 mm/sec.
+	The objective of this section is to find the minimum required torque and rotational speed needed to lift the 2500 kg load at 4 mm/sec.
 	
 	The torque required to lift a load with gravitational force $F$ is:
 	
@@ -97,4 +98,69 @@
 		\end{tabular}
 	\end{center}
 	
+A torque of 79.5 Nm is required to lift the load where efficiency losses in the power screw is accounted for by the friction coefficient, $f$. 
+
+\subsection{Worm Gear Efficiency Analysis}
+Worm gears are used in high torque applications but they are subject to efficiency losses during operation. Calculating this value allows us to find the gear train required to raise the load. \\
+
+	\begin{equation}
+	\eta = \frac{cos\phi_n - ftan\lambda}{cos\phi_n+fcot\lambda}
+	\end{equation}
+	
+The helix angle component is as follows:
+
+	\begin{equation}
+\tan \lambda =  \frac{p_x}{\pi d_p} = 0.4074366
+	\end{equation}
+
+\begin{center}
+		\begin{tabular}{ |p{2cm}||p{3cm}|p{2cm}|p{7cm}|  }
+			\hline
+			\multicolumn{4}{|c|}{Parameters} \\
+			\hline
+			Symbol& Value & Units & Description\\
+			\hline
+			$N_G$ & $18$ & N/A & Number of teeth on worm drive gear\\
+			$N_w$ & 2 & N/A   & 2-thread worm \\
+			$\phi_n$ & 14.5 & degrees &  Pressure angle\\
+			$l$ & 16 & mm & pitch\\
+			$p_x$ & 32 & mm & Axial pitch\\
+			$d_p$ & 25 & mm & Worm pitch diameter\\
+			$d_s$ & 20 & mm & Worm shaft diameter\\
+			\hline
+		\end{tabular}
+	\end{center}
+
+
+\subsection{Motor Torque Analysis}
+The motor provided has the following torque-speed curve. The maximum power output occurs when the motor operates at 2500 rmp with 2.5 Nm of torque. \\
+
+\begin{tikzpicture}
+\begin{axis}[
+    axis lines = left,
+    xlabel = Speed (rpm),
+    ylabel = {Torque (Nm)},
+    xtick={0,2000,4000},
+    ytick = {0,1,2,3,4,5,6,7},
+    legend pos = outer north east
+]
+%Below the red parabola is defined
+\addplot [
+    domain=0:5000, 
+    samples=100, 
+    color=red,
+]
+{(-x^2/1000.0+5*x)/1000.0};
+\addlegendentry{power curve}
+\addplot [
+    domain=0:5000, 
+    samples=100, 
+    color=blue,
+    ]
+    {-x/1000.0+5};
+\addlegendentry{torque-speed curve}
+ 
+\end{axis}
+\end{tikzpicture}
+
 \end{document}
