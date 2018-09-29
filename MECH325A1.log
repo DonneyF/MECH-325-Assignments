@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6800 64-bit) (preloaded format=pdflatex 2018.9.8)  28 SEP 2018 19:22
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6800 64-bit) (preloaded format=pdflatex 2018.9.8)  28 SEP 2018 20:05
 entering extended mode
 **./MECH325A1.tex
 (MECH325A1.tex
@@ -1157,32 +1157,42 @@ LaTeX Font Info:    Font shape `T1/ntxtlf/bx/n' in size <14.4> not available
 LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
 (Font)              scaled to size 14.4pt on input line 76.
 
-[2] (MECH325A1.aux) ) 
+Underfull \hbox (badness 10000) in paragraph at lines 104--105
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 136--137
+
+ []
+
+[2] [3] (MECH325A1.aux) ) 
 Here is how much of TeX's memory you used:
  26501 strings out of 492973
  652729 string characters out of 3126693
- 841737 words of memory out of 3000000
+ 848737 words of memory out of 3000000
  29854 multiletter control sequences out of 15000+200000
  56717 words of font info for 74 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 69i,17n,96p,854b,2074s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Users/chuan/AppData/Local/Programs/MiKTeX 2.9/fonts/en
-c/dvips/newtx/ntx-ot1-tlf.enc}{C:/Users/chuan/AppData/Local/Programs/MiKTeX 2.9
-/fonts/enc/dvips/base/8r.enc}{C:/Users/chuan/AppData/Local/Programs/MiKTeX 2.9/
-fonts/enc/dvips/newtx/ntx-ec-tlf.enc}{C:/Users/chuan/AppData/Local/Programs/MiK
-TeX 2.9/fonts/enc/dvips/newtx/ntx-ec-tlf-sc.enc}<C:/Users/chuan/AppData/Local/P
-rograms/MiKTeX 2.9/fonts/type1/public/tex-gyre/qtmb.pfb><C:/Users/chuan/AppData
-/Local/Programs/MiKTeX 2.9/fonts/type1/public/tex-gyre/qtmr.pfb><C:/Users/chuan
-/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/tex-gyre/qtmri.pfb><C:/Us
-ers/chuan/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/txfonts/rtxmi.pf
-b><C:/Users/chuan/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/txfonts/
-rtxr.pfb><C:/Users/chuan/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/n
-ewtx/txexs.pfb><C:/Users/chuan/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pu
-blic/newtx/txsys.pfb><C:/Users/chuan/AppData/Local/Programs/MiKTeX 2.9/fonts/ty
-pe1/urw/times/utmri8a.pfb>
-Output written on MECH325A1.pdf (3 pages, 111431 bytes).
+ 69i,17n,96p,854b,2076s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Users/chuan/AppData/Local/Programs/MiKTeX 2.9/font
+s/enc/dvips/newtx/ntx-ot1-tlf.enc}{C:/Users/chuan/AppData/Local/Programs/MiKTeX
+ 2.9/fonts/enc/dvips/base/8r.enc}{C:/Users/chuan/AppData/Local/Programs/MiKTeX 
+2.9/fonts/enc/dvips/newtx/ntx-ec-tlf.enc}{C:/Users/chuan/AppData/Local/Programs
+/MiKTeX 2.9/fonts/enc/dvips/newtx/ntx-ec-tlf-sc.enc}<C:/Users/chuan/AppData/Loc
+al/Programs/MiKTeX 2.9/fonts/type1/public/tex-gyre/qtmb.pfb><C:/Users/chuan/App
+Data/Local/Programs/MiKTeX 2.9/fonts/type1/public/tex-gyre/qtmr.pfb><C:/Users/c
+huan/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/tex-gyre/qtmri.pfb><C
+:/Users/chuan/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/newtx/rntxmi
+.pfb><C:/Users/chuan/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/txfon
+ts/rtxmi.pfb><C:/Users/chuan/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publ
+ic/txfonts/rtxr.pfb><C:/Users/chuan/AppData/Local/Programs/MiKTeX 2.9/fonts/typ
+e1/public/newtx/txexs.pfb><C:/Users/chuan/AppData/Local/Programs/MiKTeX 2.9/fon
+ts/type1/public/newtx/txsys.pfb><C:/Users/chuan/AppData/Local/Programs/MiKTeX 2
+.9/fonts/type1/urw/times/utmri8a.pfb>
+Output written on MECH325A1.pdf (4 pages, 120712 bytes).
 PDF statistics:
- 55 PDF objects out of 1000 (max. 8388607)
+ 62 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 

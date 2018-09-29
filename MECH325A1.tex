@@ -100,7 +100,40 @@
 	
 A torque of 79.5 Nm is required to lift the load where efficiency losses in the power screw is accounted for by the friction coefficient, $f$. 
 
+\subsection{Worm Gear Efficiency Analysis}
+Worm gears are used in high torque applications but they are subject to efficiency losses during operation. Calculating this value allows us to find the gear train required to raise the load. \\
+
+	\begin{equation}
+	\eta = \frac{cos\phi_n - ftan\lambda}{cos\phi_n+fcot\lambda}
+	\end{equation}
+	
+The helix angle component is as follows:
+
+	\begin{equation}
+\tan \lambda =  \frac{p_d}{\pi d_s} = 0.4074366
+	\end{equation}
+
+\begin{center}
+		\begin{tabular}{ |p{2cm}||p{3cm}|p{2cm}|p{7cm}|  }
+			\hline
+			\multicolumn{4}{|c|}{Parameters} \\
+			\hline
+			Symbol& Value & Units & Description\\
+			\hline
+			$N_G$ & $18$ & N/A & Number of teeth on worm drive gear\\
+			$N_w$ & 2 & N/A   & 2-thread worm \\
+			$\phi_n$ & 14.5 & degrees &  Pressure angle\\
+			$l$ & 16 & mm & pitch\\
+			$p_x$ & 32 & mm & Axial pitch\\
+			$d_p$ & 25 & mm & Worm pitch diameter\\
+			$d_s$ & 20 & mm & Worm shaft diameter\\
+			\hline
+		\end{tabular}
+	\end{center}
+
+
 \subsection{Motor Torque Analysis}
+The motor provided has the following torque-speed curve. The maximum power output occurs when the motor operates at 2500 rmp with 2.5 Nm of torque. \\
 
 \begin{tikzpicture}
 \begin{axis}[
