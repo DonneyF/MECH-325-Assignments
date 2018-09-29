@@ -3,6 +3,7 @@
     "number": "5172T21",
     "url": "https://www.mcmaster.com/5172t21",
     "units": "Imperial",
+    "pressure_angle": 20,
     "pitch": 16,
     "teeth": 16,
     "pitch_diameter": 1,
@@ -12,7 +13,8 @@
     "cost": 23.1,
     "overload_factor": 1,
     "lewis_form_factor": 0.296,
-    "temperature_factor": 1
+    "temperature_factor": 1,
+    "elastic_modulus": 29.7,
   },
   {
     "number": "2272839",
@@ -27,6 +29,24 @@
     "cost": 81.46,
     "overload_factor": 1,
     "lewis_form_factor": 0.296,
-    "temperature_factor": 1
+    "temperature_factor": 1,
+    "elastic_modulus": 29.7
+  }
+
+  {
+    "number": "5172T25",
+    "url": "https://www.mcmaster.com/5172t25",
+    "units": "Imperial",
+    "pitch": 16,
+    "teeth": 80,
+    "pitch_diameter": 5,
+    "OD": 5.13,
+    "face_width": 0.75,
+    "material": "1020 Carbon Steel",
+    "cost": 93.37,
+    "overload_factor": 1,
+    "lewis_form_factor": 0.436,
+    "temperature_factor": 1,
+    "elastic_modulus": 29.7
   }
 ]

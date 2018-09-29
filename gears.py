@@ -153,7 +153,7 @@ class Gear:
         C_e = 1
         C_pf = 0
 
-        min_face_width = min(gear["teeth_width"], pinion["teeth_width"])
+        min_face_width = min(gear["face_width"], pinion["face_width"])
 
         if min_face_width < 1:
             C_pf = min_face_width / (10 * pinion["pitch_diameter"]) - 0.025
