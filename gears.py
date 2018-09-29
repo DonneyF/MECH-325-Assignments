@@ -13,7 +13,10 @@ class Gear:
             # Since the motor is 2500rpm, we need a circumference of the first pinion to be at least 1.289ft
             # Which is not plausible.
     motor_speed = 2500 # RPM
+    motor_torque = 2.5 # Nm
+    motor_torque_imp = 22.13 # Pound-inches
     R = 0.98 # Reliability factor
+    overload_factor = 1
 
     # Constructor. Load the file
     def __init__(self):
@@ -45,7 +48,7 @@ class Gear:
     def interaction_cost(self, gear1, gear2):
         return self.get(gear1)["cost"] + self.get(gear2)["cost"]
 
-    def surface_strength_geometry(self, pinion_, gear_):
+    def geometry_factor_pitting_resistance(self, pinion_, gear_):
         pinion = self.get(pinion_)
         gear = self.get(gear_)
 
@@ -54,6 +57,10 @@ class Gear:
         I = (math.cos(phi) * math.sin(phi)) / (2 * self.m_n) * m_g / (m_g + 1)
 
         return I
+
+    # Alternative naming
+    def suface_strength_geometry(self, pinion_, gear_):
+        return self.geometry_factor_pitting_resistance(pinion_, gear_)
 
     def elastic_coefficient(self, pinion_, gear_):
         pinion = self.get(pinion_)
@@ -67,6 +74,7 @@ class Gear:
         return C_p
 
     def surface_condition_factor(self):
+        # Insufficient information to provide a proper calculation
         return 1
 
     def hardness_ratio_factor(self, pinion_, gear_):
@@ -75,10 +83,10 @@ class Gear:
 
         m_g = gear["teeth"] / pinion["teeth"]
 
-        brittle_hardness_pinion = pinion["brittle_hardness"]
-        brittle_hardness_gear = gear["brittle_hardness"]
+        brinell_hardness_pinion = pinion["brinell_hardness"]
+        brinell_hardness_gear = gear["brinell_hardness"]
 
-        ratio = brittle_hardness_pinion / brittle_hardness_gear
+        ratio = brinell_hardness_pinion / brinell_hardness_gear
 
         if ratio < 1.2:
             A_ = 0
@@ -90,7 +98,8 @@ class Gear:
         C_H = 1.0 + A_ * (m_g - 1.0)
         return C_H
 
-    def stress_cycle_factor(self):
+    def stress_cycle_factor_bending(self):
+        # Approximate that all gears have the same stress cycle factor
         Y = 6.1514 * self.load_cycles ** -0.1192
         return Y
 
@@ -104,7 +113,7 @@ class Gear:
         omega_p1 = self.motor_speed
         omega_g1 = self.motor_speed * pinion1["teeth"] / gear1["teeth"]
 
-        B = 0.25 * ((12 - self.Q_v) ** 2.0/3.0)
+        B = 0.25 * ((12 - self.Q_v) ** (2.0/3.0))
         A = 50 + 56 * (1- B)
 
         if pinion2_ is not None and gear2_ is not None:
@@ -115,17 +124,17 @@ class Gear:
             omega_g2 = self.motor_speed * pinion1["teeth"] * pinion2["teeth"] / (gear1["teeth"] * gear2["teeth"])
 
             if stage == 3:
-                V = math.pi * diameter * omega_p2
+                V = math.pi * diameter / 12 * omega_p2
             else:
-                V = math.pi * diameter * omega_g2
+                V = math.pi * diameter / 12* omega_g2
 
             k_v = ((A + math.sqrt(V)) / A) ** B
             return k_v
 
         if stage == 1:
-            V = math.pi * diameter * omega_p1
+            V = math.pi * diameter / 12 * omega_p1
         else:
-            V = math.pi * diameter * omega_g1
+            V = math.pi * diameter / 12 * omega_g1
 
         k_v = ((A + math.sqrt(V)) / A) ** B
         return k_v
@@ -153,25 +162,133 @@ class Gear:
         C_e = 1
         C_pf = 0
 
-        min_face_width = min(gear["teeth_width"], pinion["teeth_width"])
+        mfw = self.min_face_width(pinion_, gear_)
 
-        if min_face_width < 1:
-            C_pf = min_face_width / (10 * pinion["pitch_diameter"]) - 0.025
+        if mfw < 1:
+            C_pf = mfw / (10 * pinion["pitch_diameter"]) - 0.025
         else:
-            C_pf = min_face_width / (10 * pinion["pitch_diameter"]) - 0.0375 + 0.125 * min_face_width
+            C_pf = mfw / (10 * pinion["pitch_diameter"]) - 0.0375 + 0.125 * self.min_face_width(pinion_, gear_)
 
         # Table 14-9 - Commercial Gearing
         A = 0.127
         B = 0.0158
         C = -0.930E-4
 
-        C_ma = A + B * min_face_width + C * min_face_width ** 2
+        C_ma = A + B * mfw + C * mfw ** 2
 
         K_m = 1 + C_mc * (C_pf * C_pm + C_ma * C_e)
         return K_m
 
     def temperature_factor(self):
+        # Assume operating conditions is below 120 degrees
         return 1
 
     def reliability_factor(self):
         return 0.658 - 0.0759 * math.log(1 - self.R)
+
+    def min_face_width(self, pinion_, gear_):
+        pinion = self.get(pinion_)
+        gear = self.get(gear_)
+        min_face_width = min(gear["face_width"], pinion["face_width"])
+        return min_face_width
+
+    def stress_cycle_factor_pitting_resistance(self):
+        # Figure 14-15
+        Z_n = 2.466 * self.load_cycles ** -0.056
+        return Z_n
+
+    def allowable_contact_stress(self, gear_):
+        # Figure 14-5
+        gear = self.get(gear_)
+        H_b = gear["brinell_hardness"]
+        S_c = 322 * H_b + 29100
+        return S_c # In units of PSI
+
+    # Alterantive name for S_c
+    def surface_endurance_strength(self, gear_):
+        return self.allowable_contact_stress(gear_)
+
+    def size_factor(self, pinion_, gear_, gear_num):
+        # Section 4-10
+        pinion = self.get(pinion_)
+        gear = self.get(gear_)
+
+        lewis_form_factor = pinion["lewis_form_factor"]
+        pitch = pinion["pitch"]
+        if gear_num == 2:
+            lewis_form_factor = gear["lewis_form_factor"]
+            pitch = gear["pitch"]
+
+        K_s = 1.192 * (self.min_face_width(pinion_, gear_) * math.sqrt(lewis_form_factor) / pitch) ** 0.0535
+        return K_s
+
+    def tangential_force(self, pinion1_, gear1_, pinion2_, gear2_):
+        pinion1 = self.get(pinion1_)
+        gear1 = self.get(gear1_)
+        torque = self.motor_torque_imp
+        force = torque / (pinion1["pitch_diameter"] / 2)
+
+        # Calculate the tangential force for the second interaction if they exist
+        if pinion2_ is not None and gear2_ is not None:
+            pinion2 = self.get(pinion2_)
+            gear2 = self.get(gear2_)
+            e = pinion1["teeth"] * pinion2["teeth"] / (gear1["teeth"] * gear2["teeth"])
+            T_w = torque / e
+
+            force = T_w / (gear2["pitch_diamter"] / 2)
+
+        return force
+
+
+    def bending_stress(self, pinion1_, gear1_, pinion2_, gear2_, stage):
+        pinion1 = self.get(pinion1_)
+        gear1 = self.get(gear1_)
+
+        K_o = self.overload_factor
+
+        sigma = 0
+
+        if stage == 1:
+            W_t = self.tangential_force(pinion1_, gear1_, None, None)
+            K_v = self.dynamic_factor(pinion1_, gear1_, None, None, pinion1_, 1)
+            K_s = self.size_factor(pinion1_, gear1_, 1)
+            pitch = pinion1["pitch"]
+            F = self.min_face_width(pinion1_, gear1_)
+            K_m = self.load_distribution_factor(pinion1_, gear1_)
+            K_b = self.rim_thickness_factor(pinion1_)
+            J = pinion1["geometry_factor"]
+            sigma = W_t * K_o * K_v * K_s * pitch / F * K_m * K_b / J
+        elif stage == 2:
+            W_t = self.tangential_force(pinion1_, gear1_, None, None)
+            K_v = self.dynamic_factor(pinion1_, gear1_, None, None, gear1_, 2)
+            K_s = self.size_factor(pinion1_, gear1_, 2)
+            pitch = gear1["pitch"]
+            F = self.min_face_width(pinion1_, gear1_)
+            K_m = self.load_distribution_factor(pinion1_, gear1_)
+            K_b = self.rim_thickness_factor(gear1_)
+            J = gear1["geometry_factor"]
+            sigma = W_t * K_o * K_v * K_s * pitch / F * K_m * K_b / J
+        elif stage == 3 and pinion2_ is not None and gear2_ is not None:
+            pinion2 = self.get(pinion2_)
+            W_t = self.tangential_force(pinion1_, gear1_, pinion2_, gear2_)
+            K_v = self.dynamic_factor(pinion1_, gear1_, pinion2_, gear2_, pinion1_, 3)
+            K_s = self.size_factor(pinion2_, gear2_, 1)
+            pitch = pinion2["pitch"]
+            F = self.min_face_width(pinion2_, gear2_)
+            K_m = self.load_distribution_factor(pinion2_, gear2_)
+            K_b = self.rim_thickness_factor(pinion2_)
+            J = pinion2["geometry_factor"]
+            sigma = W_t * K_o * K_v * K_s * pitch / F * K_m * K_b / J
+        elif stage == 4 and pinion2_ is not None and gear2_ is not None:
+            gear2 = self.get(gear2_)
+            W_t = self.tangential_force(pinion1_, gear1_, pinion2_, gear2_)
+            K_v = self.dynamic_factor(pinion1_, gear1_, pinion2_, gear2_, gear2_, 4)
+            K_s = self.size_factor(pinion2_, gear2_, 2)
+            pitch = gear2["pitch"]
+            F = self.min_face_width(pinion2_, gear2_)
+            K_m = self.load_distribution_factor(pinion2_, gear2_)
+            K_b = self.rim_thickness_factor(gear2_)
+            J = gear2["geometry_factor"]
+            sigma = W_t * K_o * K_v * K_s * pitch / F * K_m * K_b / J
+
+        return sigma

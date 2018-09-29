@@ -12,7 +12,9 @@
     "cost": 23.1,
     "overload_factor": 1,
     "lewis_form_factor": 0.296,
-    "temperature_factor": 1
+    "geometry_factor": 0.27,
+    "rim_thickness": 0.421875,
+    "tooth_height": 0.140625
   },
   {
     "number": "2272839",
@@ -27,6 +29,8 @@
     "cost": 81.46,
     "overload_factor": 1,
     "lewis_form_factor": 0.296,
-    "temperature_factor": 1
+    "geometry_factor": 0.37,
+    "rim_thickness": 1.027,
+    "tooth_height": 0.25
   }
 ]
