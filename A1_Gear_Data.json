@@ -14,7 +14,8 @@
     "lewis_form_factor": 0.296,
     "geometry_factor": 0.27,
     "rim_thickness": 0.421875,
-    "tooth_height": 0.140625
+    "tooth_height": 0.140625,
+    "elastic_modulus": 30E6
   },
   {
     "number": "2272839",
@@ -28,10 +29,11 @@
     "material": "Steel",
     "cost": 81.46,
     "overload_factor": 1,
-    "lewis_form_factor": 0.296,
+    "lewis_form_factor": 0.377,
     "geometry_factor": 0.37,
     "rim_thickness": 1.027,
-    "tooth_height": 0.25
+    "tooth_height": 0.25,
+    "elastic_modulus": 30E6
   },
   {
     "number": "5172T25",
@@ -46,7 +48,6 @@
     "cost": 93.37,
     "overload_factor": 1,
     "lewis_form_factor": 0.436,
-    "temperature_factor": 1,
     "elastic_modulus": 29.7
   },
   {
@@ -62,7 +63,6 @@
     "cost": 14.51,
     "overload_factor": 1,
     "lewis_form_factor": 0.276,
-    "temperature_factor": 1,
     "elastic_modulus": 15.4
   },
   {
@@ -78,7 +78,6 @@
     "cost": 37.62,
     "overload_factor": 1,
     "lewis_form_factor": 0.276,
-    "temperature_factor": 1,
     "elastic_modulus": 28
   },
   {
@@ -94,7 +93,6 @@
     "cost": 36.05,
     "overload_factor": 1,
     "lewis_form_factor": 0.421,
-    "temperature_factor": 1,
     "elastic_modulus": 28
   },
   {
@@ -110,7 +108,6 @@
     "cost": 22.88,
     "overload_factor": 1,
     "lewis_form_factor": 0.245,
-    "temperature_factor": 1,
     "elastic_modulus": 15.4
   }
 ]

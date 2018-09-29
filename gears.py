@@ -35,10 +35,10 @@ class Gear:
             print(gear)
             gear[key] = value
 
-        with open('A1_gearData.json', 'w') as outfile:
+        with open('A1_Gear_Data.json', 'w') as outfile:
             json.dump(self.gears, outfile)
 
-        with open('A1_gearData.json', 'r') as infile:
+        with open('A1_Gear_Data.json', 'r') as infile:
             self.gears = json.load(infile)
 
     # Get the costs of the two gears
@@ -109,7 +109,7 @@ class Gear:
             if stage == 3:
                 V = math.pi * diameter / 12 * omega_p2
             else:
-                V = math.pi * diameter / 12* omega_g2
+                V = math.pi * diameter / 12 * omega_g2
 
             k_v = ((A + math.sqrt(V)) / A) ** B
             return k_v
