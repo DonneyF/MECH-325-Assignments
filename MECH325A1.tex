@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage{newtxtext,newtxmath}
+\usepackage{pgfplots}
 
 \begin{document}
 	
@@ -74,7 +75,7 @@
 	
 	\subsection{Power Screw Analysis}
 	
-	The objective of this section is to find the minimum required torque and rotational speed needed to lift the 2500kg load at 4 mm/sec.
+	The objective of this section is to find the minimum required torque and rotational speed needed to lift the 2500 kg load at 4 mm/sec.
 	
 	The torque required to lift a load with gravitational force $F$ is:
 	
@@ -97,4 +98,36 @@
 		\end{tabular}
 	\end{center}
 	
+A torque of 79.5 Nm is required to lift the load where efficiency losses in the power screw is accounted for by the friction coefficient, $f$. 
+
+\subsection{Motor Torque Analysis}
+
+\begin{tikzpicture}
+\begin{axis}[
+    axis lines = left,
+    xlabel = Speed (rpm),
+    ylabel = {Torque (Nm)},
+    xtick={0,2000,4000},
+    ytick = {0,1,2,3,4,5,6,7},
+    legend pos = outer north east
+]
+%Below the red parabola is defined
+\addplot [
+    domain=0:5000, 
+    samples=100, 
+    color=red,
+]
+{(-x^2/1000.0+5*x)/1000.0};
+\addlegendentry{power curve}
+\addplot [
+    domain=0:5000, 
+    samples=100, 
+    color=blue,
+    ]
+    {-x/1000.0+5};
+\addlegendentry{torque-speed curve}
+ 
+\end{axis}
+\end{tikzpicture}
+
 \end{document}

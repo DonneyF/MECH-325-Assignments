@@ -20,17 +20,18 @@
     "number": "2272839",
     "url": "https://www.mscdirect.com/product/details/02272839",
     "units": "Imperial",
+    "pressure_angle": 20,
     "pitch": 16,
     "teeth": 36,
     "pitch_diameter": 2.25,
-    "OD": 0,
+    "OD": -1,
     "face_width": 0.75,
     "material": "Steel",
     "cost": 81.46,
     "overload_factor": 1,
     "lewis_form_factor": 0.296,
     "temperature_factor": 1,
-    "elastic_modulus": 29.7
+    "elastic_modulus": 30.0
   }
 
   {
@@ -117,9 +118,4 @@
     "temperature_factor": 1,
     "elastic_modulus": 15.4
   }
-
-
-
-
-
 ]
