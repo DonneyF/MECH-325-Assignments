@@ -49,4 +49,77 @@
     "temperature_factor": 1,
     "elastic_modulus": 29.7
   }
+
+  {
+    "number": "7880K26",
+    "url": "https://www.mcmaster.com/7880k26",
+    "units": "Imperial",
+    "pitch": 32,
+    "teeth": 14,
+    "pitch_diameter": 0.438,
+    "OD": 0.5,
+    "face_width": 0.1875,
+    "material": "Brass",
+    "cost": 14.51,
+    "overload_factor": 1,
+    "lewis_form_factor": 0.276,
+    "temperature_factor": 1,
+    "elastic_modulus": 15.4
+  }
+
+  {
+    "number": "6832K58",
+    "url": "https://www.mcmaster.com/6832k58",
+    "units": "Imperial",
+    "pitch": 32,
+    "teeth": 72,
+    "pitch_diameter": 2.25,
+    "OD": 2.31,
+    "face_width": 0.1875,
+    "material": "303 Stainless Steel",
+    "cost": 37.62,
+    "overload_factor": 1,
+    "lewis_form_factor": 0.276,
+    "temperature_factor": 1,
+    "elastic_modulus": 28
+  }
+
+  {
+    "number": "6832K66",
+    "url": "https://www.mcmaster.com/6832k66",
+    "units": "Imperial",
+    "pitch": 24,
+    "teeth": 60,
+    "pitch_diameter": 2.5,
+    "OD": 2.58,
+    "face_width": 0.1875,
+    "material": "303 Stainless Steel",
+    "cost": 36.05,
+    "overload_factor": 1,
+    "lewis_form_factor": 0.421,
+    "temperature_factor": 1,
+    "elastic_modulus": 28
+  }
+
+  {
+    "number": "7880K37",
+    "url": "https://www.mcmaster.com/7880k37",
+    "units": "Imperial",
+    "pitch": 24,
+    "teeth": 12,
+    "pitch_diameter": 0.5,
+    "OD": 0.58,
+    "face_width": 0.25,
+    "material": "Brass",
+    "cost": 22.88,
+    "overload_factor": 1,
+    "lewis_form_factor": 0.245,
+    "temperature_factor": 1,
+    "elastic_modulus": 15.4
+  }
+
+
+
+
+
 ]
