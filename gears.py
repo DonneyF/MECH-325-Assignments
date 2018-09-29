@@ -53,9 +53,8 @@ class Gear:
         gear = self.get(gear_)
 
         m_g = gear["teeth"] / pinion["teeth"]
-        phi = 20 #Transverse pressure angle
+        phi = 20 * math.pi / 180 #Transverse pressure angle in radians
         I = (math.cos(phi) * math.sin(phi)) / (2 * self.m_n) * m_g / (m_g + 1)
-
         return I
 
     # Alternative naming
@@ -63,6 +62,7 @@ class Gear:
         return self.geometry_factor_pitting_resistance(pinion_, gear_)
 
     def elastic_coefficient(self, pinion_, gear_):
+        # Table 14-8
         pinion = self.get(pinion_)
         gear = self.get(gear_)
 
@@ -243,9 +243,7 @@ class Gear:
     def bending_stress(self, pinion1_, gear1_, pinion2_, gear2_, stage):
         pinion1 = self.get(pinion1_)
         gear1 = self.get(gear1_)
-
         K_o = self.overload_factor
-
         sigma = 0
 
         if stage == 1:
@@ -290,5 +288,47 @@ class Gear:
             K_b = self.rim_thickness_factor(gear2_)
             J = gear2["geometry_factor"]
             sigma = W_t * K_o * K_v * K_s * pitch / F * K_m * K_b / J
+
+        return sigma
+
+    def contact_stress(self, pinion1_, gear1_, pinion2_, gear2_, stage):
+        pinion1 = self.get(pinion1_)
+        gear1 = self.get(gear1_)
+        sigma = 0
+        K_o = self.overload_factor
+        C_f = self.surface_condition_factor()
+
+        if stage == 1 or stage == 2:
+            W_t = self.tangential_force(pinion1_, gear1_, None, None)
+            F = self.min_face_width(pinion1_, gear1_)
+            K_m = self.load_distribution_factor(pinion1_, gear1_)
+            C_p = self.elastic_coefficient(pinion1_, gear1_)
+            I = self.geometry_factor_pitting_resistance(pinion1_, gear1_)
+
+            d_p = pinion1["pitch_diameter"] if stage == 1 else gear1["pitch_diameter"]
+
+            if stage == 1:
+                K_v = self.dynamic_factor(pinion1_, gear1_, None, None, pinion1_, 1)
+                sigma = C_p * math.sqrt(W_t * K_o * K_v * K_m / d_p / F * C_f / I)
+            elif stage == 2:
+                K_v = self.dynamic_factor(pinion1_, gear1_, None, None, gear1_, 1)
+                sigma = C_p * math.sqrt(W_t * K_o * K_v * K_m / d_p / F * C_f / I)
+        elif stage == 3 or stage == 4:
+            pinion2 = self.get(pinion2_)
+            gear2 = self.get(gear2_)
+            W_t = self.tangential_force(pinion2_, gear2_, None, None)
+            F = self.min_face_width(pinion2_, gear2_)
+            K_m = self.load_distribution_factor(pinion2_, gear2_)
+            C_p = self.elastic_coefficient(pinion2_, gear2_)
+            I = self.geometry_factor_pitting_resistance(pinion2_, gear2_)
+
+            d_p = pinion1["pitch_diameter"] if stage == 1 else gear1["pitch_diameter"]
+
+            if stage == 1:
+                K_v = self.dynamic_factor(pinion1_, gear1_, pinion2_, gear2_, gear2_, 3)
+                sigma = C_p * math.sqrt(W_t * K_o * K_v * K_m / d_p / F * C_f / I)
+            elif stage == 2:
+                K_v = self.dynamic_factor(pinion1_, gear1_, pinion2_, gear2_, gear2_, 4)
+                sigma = C_p * math.sqrt(W_t * K_o * K_v * K_m / d_p / F * C_f / I)
 
         return sigma
