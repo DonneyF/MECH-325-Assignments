@@ -287,4 +287,86 @@ S_{H(contact)} = \frac{S_c}{\sigma_c}\frac{Z_N C_H}{K_T K_R}
 	\end{tabular}
 \end{center}
 
+\subsection{Bending \& Contact Stress Analysis}
+
+Detailed stress analysis was performed on each gear and pinion considered for the design of the gear train. Major stress factors were determined to come from the bending and contact stresses exerted on the gear/pinion system during meshing. The following equation was used calculate and verify the allowable bending stress:
+
+    \begin{equation}
+        \sigma_{bending} = W^t K_o K_v K_s \frac{P_d}{F}\frac{K_s K_B}{J} \\
+    \end{equation}
+
+    \begin{center}
+		\begin{tabular}{ |p{2cm}||p{2cm}|p{7cm}|  }
+			\hline
+			\multicolumn{3}{|c|}{Parameters} \\
+			\hline
+			Symbol & Units & Description\\
+			\hline
+			$W^t$ & lbf & Tangential transmitted load\\
+			$K_o$ & N/A & Overload factor\\
+			$K_v$ & N/A &  Dynamic factor\\
+			$K_s$ & N/A & Size factor\\
+			$P_{d}$ & N/A & Transverse Diametral pitch\\
+			$F$ & mm & Face Width of narrower member\\
+			$K_m$ & N/a & Load-distribution factor\\
+			$K_{B}$ & N/A & Rim-thickness factor\\
+			$J$ & N/A & Geometry factor (bending strength)\\
+			\hline
+		\end{tabular}
+	\end{center}
+	
+\newpage \noindent
+The contact stress measurement was taken into account by the following equation, along with the following new parameters:
+
+	\begin{equation}
+	    \sigma_{contact} = C_{p}\sqrt{W^t K_o K_v K_s \frac{K_m}{d_P F}\frac{C_f}{I}}
+	\end{equation}
+	
+	\begin{center}
+	    \begin{tabular}{ |p{2cm}||p{2cm}|p{7cm}|  }
+			\hline
+			\multicolumn{3}{|c|}{Parameters} \\
+			\hline
+			Symbol & Units & Description\\
+			\hline
+			$C_p$ & $\sqrt{lbf/in^2}$ & Elastic Coefficient\\
+			$C_f$ & N/A & Surface condition factor\\
+			$d_P$ & mm & Pitch diameter\\
+			$I$ & N/A & Geometry Factor (pitting resistance)\\
+			\hline
+		\end{tabular}
+	\end{center}
+
+\noindent\textbf{Note:} Many of the factors are constants that were obtained from reading values off graphs and tables. Other values depend on the material, geometry, and physical properties of the gear and pinion. Furthermore, all the parameters in the stress equations are in U.S. customary units.
+
+\subsection{Safety Factor Analysis}
+To ensure the gear train system maintains an acceptable level of safety (2.2 minimum), bending and contact safety factors were calculated to validate design specifications.
+
+    \begin{equation}
+        S_{F(bending)} = \frac{S_t}{\sigma_b}\frac{Y_N}{K_T K_R} \\
+    \end{equation}
+    \begin{equation}
+        S_{H(contact)} = \frac{S_c}{\sigma_c}\frac{Z_N C_H}{K_T K_R}
+    \end{equation}
+    
+    \begin{center}
+	    \begin{tabular}{ |p{2cm}||p{2cm}|p{7cm}|  }
+			\hline
+			\multicolumn{3}{|c|}{Parameters} \\
+			\hline
+			Symbol & Units & Description\\
+			\hline
+			$S_t$ & bf/in$^2$ & AGMA bending strength\\
+			$S_c$ & lbf/in$^2$ & AGMA surface endurance strength\\
+			$Y_N$ & N/A & Stress cycle factor (bending strength)\\
+			$Z_N$ & N/A & Stress cycle factor (pitting resistance)\\
+			$C_H$ & N/A & Hardness-ratio factor\\
+			$\sigma_b$ & lbf/in$^2$ & Bending stress\\
+			$\sigma_c$ & lbf/in$^2$ & Contact stress\\
+			$K_T$ & N/A & Temperature factor\\
+			$K_R$ & N/A & Reliability factor\\
+			\hline
+		\end{tabular}
+	\end{center}
+
 \end{document}
