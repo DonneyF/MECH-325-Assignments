@@ -75,8 +75,14 @@
 	
 	\subsection{Power Screw Analysis}
 	
-	The objective of this section is to find the minimum required torque and rotational speed needed to lift the 2500 kg load at 4 mm/sec.
-	
+	The objective of this section is to verify the power screw is self-locking and find the minimum required torque and rotational speed needed to lift the 2500 kg load at 4 mm/sec.
+	Self-locking is ensured when the coefficient of thread friction is greater than a threshold defined as follows:
+	\begin{equation}
+	f > tan(\lambda)
+	\end{equation}
+	$$tan\lambda = \frac{l}{\pi d_m} = 0.0335$$
+    Since $f = 0.08 > \tan\lambda = 0.03$, the current design is self-locking. \\
+    	
 	The torque required to lift a load with gravitational force $F$ is:
 	
 	\begin{equation}
@@ -91,7 +97,8 @@
 			Symbol& Value & Units & Description\\
 			\hline
 			$F$ & $2500 \times 9.81$ & N & Axial compressive force\\
-			$d_m$ & 57 & mm   & Mean diameter\\
+            $d$ & 60 & mm   & Major diameter\\			
+			$d_m$ & 57 & mm   & Mean diameter, $d - \frac{l}{2}$\\
 			$l$ & 6 & mm &  Pitch\\
 			$f$ & 0.08 & N/A & Friction Coefficient\\
 			\hline
@@ -99,8 +106,8 @@
 	\end{center}
 	
 A torque of 79.5 Nm is required to lift the load where efficiency losses in the power screw is accounted for by the friction coefficient, $f$. 
-
-\subsection{Worm Gear Efficiency Analysis}
+    
+\subsection{Worm Gear Analysis}
 Worm gears are used in high torque applications but they are subject to efficiency losses during operation. Calculating this value allows us to find the gear train required to raise the load. \\
 
 	\begin{equation}
@@ -108,11 +115,10 @@ Worm gears are used in high torque applications but they are subject to efficien
 	\end{equation}
 	
 The helix angle component is as follows:
-
 	\begin{equation}
 \tan \lambda =  \frac{p_x}{\pi d_p} = 0.4074366
 	\end{equation}
-
+We find the worm gear is therefore $80.34 \% $ efficient.
 \begin{center}
 		\begin{tabular}{ |p{2cm}||p{3cm}|p{2cm}|p{7cm}|  }
 			\hline
@@ -131,36 +137,73 @@ The helix angle component is as follows:
 		\end{tabular}
 	\end{center}
 
+The 2-threaded worm gear engages with an 18 teeth worm drive nut. For each 9 revolution of the worm gear, the nut completes 1 revolution, resulting in a 9 fold torque increase. 
 
-\subsection{Motor Torque Analysis}
-The motor provided has the following torque-speed curve. The maximum power output occurs when the motor operates at 2500 rmp with 2.5 Nm of torque. \\
+$$\frac{\tau }{9 \eta_{worm}} = \frac{79.5}{9(0.8034)} = 11.0 Nm$$
 
+Therefore, the system requires 11.0 Nm to reach the worm gear. 
+
+\subsection{Motor Torque and Gear Reduction}
+The motor provided has the following torque-speed curve. The maximum power output occurs when the motor operates at 2500 rpm with 2.5 Nm of torque. \\
+
+\begin{figure}[htbp] 
+    \centering 
 \begin{tikzpicture}
 \begin{axis}[
-    axis lines = left,
+    xmin = 0, xmax = 5000,
+     ymin = 0, ymax = 7,    
+    axis y line*=left,
     xlabel = Speed (rpm),
     ylabel = {Torque (Nm)},
     xtick={0,2000,4000},
     ytick = {0,1,2,3,4,5,6,7},
     legend pos = outer north east
 ]
-%Below the red parabola is defined
-\addplot [
-    domain=0:5000, 
-    samples=100, 
-    color=red,
-]
-{(-x^2/1000.0+5*x)/1000.0};
-\addlegendentry{power curve}
+
 \addplot [
     domain=0:5000, 
     samples=100, 
     color=blue,
     ]
     {-x/1000.0+5};
-\addlegendentry{torque-speed curve}
- 
 \end{axis}
+
+   \begin{axis}[
+     xmin = 0, xmax = 5000,
+     ymin = 0, ymax = 700,
+     hide x axis,
+     hide y axis]
+     \addplot [
+    domain=0:5000, 
+    samples=100, 
+    color=red,
+]
+{(-x/1000.0+5)*(x*2*3.1415926/60.0)};
+   \end{axis}
+   \pgfplotsset{every axis y label/.append style={rotate=180,yshift=9.5cm}}
+   \begin{axis}[
+         xmin=0, xmax=5000,
+         ymin=0, ymax=700,
+         hide x axis,
+         axis y line*=right,
+         ylabel={Power (W)}
+     ]
+   \end{axis}
 \end{tikzpicture}
+\caption{Torque and power curve for chosen motor. Blue shows the torque and red shows the power output. Power is maximized at 2500 rpm.}
+\end{figure}
+
+The relationship to determine train value given torque specifications, $e$ is:
+\begin{equation}
+e = \frac{T_{out}}{T_{in} f_{g}} = \frac{11}{2.5} f_{g} = 4.4f_g
+\end{equation}
+where $T_{out}$ = torque output, $T_{in}$ = torque input, and $f_g$ = gear efficiency. \\
+Spur gears are selected for their efficiency, between 94 - 98 \%, and simplicity. We assume the lower bound of efficiency. 
+\begin{eqnarray}
+\text{(simple two-gear system)}    \indent\indent &e = \displaystyle\frac{4.4}{ 0.94} = 4.68\\
+\text{(compound four-gear system)} \indent\indent &e =  \displaystyle\frac{4.4}{ (0.94)(0.94)} = 5.0 
+\end{eqnarray}
+
+If only two gears are used, select gear ratio to be at least 4.68. If a compound four gear system is appropriate, select gear ratio to be at least 5.0.
 
 \end{document}
