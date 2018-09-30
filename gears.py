@@ -45,7 +45,8 @@ class Gear:
 
     # Get the costs of the two gears
     def interaction_cost(self, gear1, gear2):
-        return gear1["cost"] + gear2["cost"]
+        #return gear1["cost"] + gear2["cost"]
+        return self.get(gear1)["cost"] + self.get(gear2)["cost"]
 
     def geometry_factor_pitting_resistance(self, pinion, gear):
 
