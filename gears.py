@@ -16,7 +16,9 @@ class Gear:
     motor_torque = 2.5 # Nm
     motor_torque_imp = 22.13 # Pound-inches
     R = 0.98 # Reliability factor
+    reliability_factor = 0.658 - 0.0759 * math.log(1 - R)
     overload_factor = 1
+    temperature_factor = 1
 
     # Constructor. Load the file
     def __init__(self):
@@ -157,13 +159,6 @@ class Gear:
         K_m = 1 + C_mc * (C_pf * C_pm + C_ma * C_e)
         return K_m
 
-    def temperature_factor(self):
-        # Assume operating conditions is below 120 degrees
-        return 1
-
-    def reliability_factor(self):
-        return 0.658 - 0.0759 * math.log(1 - self.R)
-
     def min_face_width(self, pinion, gear):
         min_face_width = min(gear["face_width"], pinion["face_width"])
         return min_face_width
@@ -178,6 +173,12 @@ class Gear:
         H_b = gear["brinell_hardness"]
         S_c = 322 * H_b + 29100
         return S_c # In units of PSI
+
+    def allowable_bending_stress(self, gear):
+        # Figure 14-2
+        H_b = gear["brinell_hardness"]
+        S_t = 77.3 * H_b + 12800
+        return S_t
 
     # Alterantive name for S_c
     def surface_endurance_strength(self, gear):
@@ -297,3 +298,25 @@ class Gear:
                 sigma = C_p * math.sqrt(W_t * K_o * K_v * K_m / d_p / F * C_f / I)
 
         return sigma
+
+    def safety_factor_bending(self, gear_, bending_stress):
+        gear = self.get(gear_)
+        S_t = self.allowable_bending_stress(gear)
+        Y_n = self.stress_cycle_factor_bending()
+        K_t = self.temperature_factor
+        K_r = self.reliability_factor
+
+        S_f = S_t * Y_n / (K_t * K_r * bending_stress)
+        return S_f
+
+    def safety_factor_contact(self, pinion_, gear_, contact_stress):
+        gear = self.get(gear_)
+        pinion = self.get(pinion_)
+        S_c = self.allowable_contact_stress(gear)
+        Z_n = self.stress_cycle_factor_pitting_resistance()
+        C_h = self.hardness_ratio_factor(pinion, gear)
+        K_t = self.temperature_factor
+        K_r = self.reliability_factor
+
+        S_h = S_c * Z_n * C_h / (K_t * K_r * contact_stress)
+        return S_h

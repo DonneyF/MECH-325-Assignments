@@ -6,16 +6,15 @@
     "pitch": 16,
     "teeth": 16,
     "pitch_diameter": 1,
-    "OD": 1.13,
     "face_width": 0.75,
     "material": "1020 Carbon Steel",
     "cost": 23.1,
-    "overload_factor": 1,
     "lewis_form_factor": 0.296,
     "geometry_factor": 0.27,
     "rim_thickness": 0.421875,
     "tooth_height": 0.140625,
-    "elastic_modulus": 30E6
+    "elastic_modulus": 30E6,
+    "brinell_hardness": 250
   },
   {
     "number": "2272839",
@@ -24,16 +23,15 @@
     "pitch": 16,
     "teeth": 36,
     "pitch_diameter": 2.25,
-    "OD": 0,
     "face_width": 0.75,
     "material": "Steel",
     "cost": 81.46,
-    "overload_factor": 1,
     "lewis_form_factor": 0.377,
     "geometry_factor": 0.37,
     "rim_thickness": 1.027,
     "tooth_height": 0.25,
-    "elastic_modulus": 30E6
+    "elastic_modulus": 30E6,
+    "brinell_hardness": 350
   },
   {
     "number": "5172T25",
@@ -42,13 +40,12 @@
     "pitch": 16,
     "teeth": 80,
     "pitch_diameter": 5,
-    "OD": 5.13,
     "face_width": 0.75,
     "material": "1020 Carbon Steel",
     "cost": 93.37,
-    "overload_factor": 1,
     "lewis_form_factor": 0.436,
-    "elastic_modulus": 29.7
+    "elastic_modulus": 30E6,
+    "brinell_hardness": 250
   },
   {
     "number": "7880K26",
@@ -57,13 +54,12 @@
     "pitch": 32,
     "teeth": 14,
     "pitch_diameter": 0.438,
-    "OD": 0.5,
     "face_width": 0.1875,
     "material": "Brass",
     "cost": 14.51,
-    "overload_factor": 1,
     "lewis_form_factor": 0.276,
-    "elastic_modulus": 15.4
+    "elastic_modulus": 15.4E6,
+    "brinell_hardness": 200
   },
   {
     "number": "6832K58",
@@ -72,14 +68,13 @@
     "pitch": 32,
     "teeth": 72,
     "pitch_diameter": 2.25,
-    "OD": 2.31,
     "face_width": 0.1875,
     "material": "303 Stainless Steel",
     "cost": 37.62,
-    "overload_factor": 1,
     "lewis_form_factor": 0.276,
-    "elastic_modulus": 28
-  },
+    "elastic_modulus": 28E6,
+    "brinell_hardness": 500
+    },
   {
     "number": "6832K66",
     "url": "https://www.mcmaster.com/6832k66",
@@ -87,13 +82,12 @@
     "pitch": 24,
     "teeth": 60,
     "pitch_diameter": 2.5,
-    "OD": 2.58,
     "face_width": 0.1875,
     "material": "303 Stainless Steel",
     "cost": 36.05,
-    "overload_factor": 1,
     "lewis_form_factor": 0.421,
-    "elastic_modulus": 28
+    "elastic_modulus": 28E6,
+    "brinell_hardness": 500
   },
   {
     "number": "7880K37",
@@ -102,12 +96,11 @@
     "pitch": 24,
     "teeth": 12,
     "pitch_diameter": 0.5,
-    "OD": 0.58,
     "face_width": 0.25,
     "material": "Brass",
     "cost": 22.88,
-    "overload_factor": 1,
     "lewis_form_factor": 0.245,
-    "elastic_modulus": 15.4
+    "elastic_modulus": 15.4E6,
+    "brinell_hardness": 200
   }
 ]
