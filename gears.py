@@ -19,6 +19,10 @@ class Gear:
     reliability_factor = 0.658 - 0.0759 * math.log(1 - R)
     overload_factor = 1
     temperature_factor = 1
+    worm_power_screw_ratio = 1.0/9.0
+    power_screw_pitch = 6 # In mm
+    motor_operation_cost = 0.30 # Dollars per hour
+    stroke_length = 30 * 2 # in cm (raise and lower)
 
     # Constructor. Load the file
     def __init__(self):
@@ -45,8 +49,8 @@ class Gear:
 
     # Get the costs of the two gears
     def interaction_cost(self, gear1, gear2):
-        #return gear1["cost"] + gear2["cost"]
-        return self.get(gear1)["cost"] + self.get(gear2)["cost"]
+        return gear1["cost"] + gear2["cost"]
+        #return self.get(gear1)["cost"] + self.get(gear2)["cost"]
 
     def geometry_factor_pitting_resistance(self, pinion, gear):
 
@@ -107,7 +111,7 @@ class Gear:
 
         if pinion2 is not None and gear2 is not None:
             omega_p2 = omega_g1
-            omega_g2 = self.motor_speed * pinion1["teeth"] * pinion2["teeth"] / (gear1["teeth"] * gear2["teeth"])
+            omega_g2 = self.motor_speed * self.train_value(pinion1, gear1, pinion2, gear2)
 
             if stage == 3:
                 V = math.pi * diameter / 12 * omega_p2
@@ -181,6 +185,13 @@ class Gear:
         S_t = 77.3 * H_b + 12800
         return S_t
 
+    def train_value(self, pinion1, gear1, pinion2, gear2):
+        e  = pinion1["teeth"] / gear1["teeth"]
+        if pinion2 is not None and gear2 is not None:
+            e = pinion1["teeth"] * pinion2["teeth"] / (gear1["teeth"] * gear2["teeth"])
+
+        return e
+
     # Alterantive name for S_c
     def surface_endurance_strength(self, gear):
         return self.allowable_contact_stress(gear)
@@ -202,7 +213,7 @@ class Gear:
 
         # Calculate the tangential force for the second interaction if they exist
         if pinion2 is not None and gear2 is not None:
-            e = pinion1["teeth"] * pinion2["teeth"] / (gear1["teeth"] * gear2["teeth"])
+            e = self.train_value(pinion1, gear1, pinion2, gear2)
             T_w = torque / e
 
             force = T_w / (gear2["pitch_diamter"] / 2)
@@ -210,9 +221,7 @@ class Gear:
         return force
 
 
-    def bending_stress(self, pinion1_s, gear1_s, pinion2_s, gear2_s, stage):
-        pinion1 = self.get(pinion1_s)
-        gear1 = self.get(gear1_s)
+    def bending_stress(self, pinion1, gear1, pinion2, gear2, stage):
         K_o = self.overload_factor
         sigma = 0
 
@@ -235,8 +244,6 @@ class Gear:
                 K_b = self.rim_thickness_factor(gear1)
                 sigma = W_t * K_o * K_v * K_s * pitch / F * K_m * K_b / J
         elif stage == 3 or stage == 4:
-            pinion2 = self.get(pinion2_s)
-            gear2 = self.get(gear2_s)
             W_t = self.tangential_force(pinion1, gear1, pinion2, gear2)
             F = self.min_face_width(pinion2, gear2)
             K_m = self.load_distribution_factor(pinion2, gear2)
@@ -257,10 +264,7 @@ class Gear:
 
         return sigma
 
-    def contact_stress(self, pinion1_s, gear1_s, pinion2_s, gear2_s, stage):
-        pinion1 = self.get(pinion1_s)
-        gear1 = self.get(gear1_s)
-
+    def contact_stress(self, pinion1, gear1, pinion2, gear2, stage):
         sigma = 0
         K_o = self.overload_factor
         C_f = self.surface_condition_factor()
@@ -281,8 +285,6 @@ class Gear:
                 K_v = self.dynamic_factor(pinion1, gear1, None, None, gear1, 1)
                 sigma = C_p * math.sqrt(W_t * K_o * K_v * K_m / d_p / F * C_f / I)
         elif stage == 3 or stage == 4:
-            pinion2 = self.get(pinion2_s)
-            gear2 = self.get(gear2_s)
             W_t = self.tangential_force(pinion2, gear2, None, None)
             F = self.min_face_width(pinion2, gear2)
             K_m = self.load_distribution_factor(pinion2, gear2)
@@ -300,8 +302,7 @@ class Gear:
 
         return sigma
 
-    def safety_factor_bending(self, gear_, bending_stress):
-        gear = self.get(gear_)
+    def safety_factor_bending(self, gear, bending_stress):
         S_t = self.allowable_bending_stress(gear)
         Y_n = self.stress_cycle_factor_bending()
         K_t = self.temperature_factor
@@ -310,9 +311,7 @@ class Gear:
         S_f = S_t * Y_n / (K_t * K_r * bending_stress)
         return S_f
 
-    def safety_factor_contact(self, pinion_, gear_, contact_stress):
-        gear = self.get(gear_)
-        pinion = self.get(pinion_)
+    def safety_factor_contact(self, pinion, gear, contact_stress):
         S_c = self.allowable_contact_stress(gear)
         Z_n = self.stress_cycle_factor_pitting_resistance()
         C_h = self.hardness_ratio_factor(pinion, gear)
@@ -321,3 +320,29 @@ class Gear:
 
         S_h = S_c * Z_n * C_h / (K_t * K_r * contact_stress)
         return S_h
+
+    def power_screw_velocity(self, pinion1, gear1, pinion2, gear2):
+        e = self.train_value(pinion1, gear1, None, None)
+
+        if pinion2 is not None and gear2 is not None:
+            e = self.train_value(pinion1, gear1, pinion2, gear2)
+
+        omega_motor = self.motor_speed * 2 * math.pi / 60.0
+        omega_worm = e * omega_motor
+        omega_screw = omega_worm * self.worm_power_screw_ratio
+        screw_speed = omega_screw / (2 * math.pi) * self.power_screw_pitch
+        return screw_speed # In mm/s
+
+
+    # Get the performance metric
+    def performance_metric(self, pinion1, gear1, pinion2, gear2, stage):
+        speed = self.power_screw_velocity(pinion1, gear1, None, None)
+        seconds_per_stroke = self.stroke_length * 100 / speed
+        cost = self.interaction_cost(pinion1, gear1) + seconds_per_stroke * self.load_cycles / 3600 * self.motor_operation_cost
+
+        if pinion2 is not None and gear2 is not None:
+            speed = self.power_screw_velocity(pinion1, gear1, pinion2, gear2)
+            seconds_per_stroke = self.stroke_length * 100 / speed
+            cost = self.interaction_cost(pinion2, gear2) + self.interaction_cost(pinion1, gear1) + seconds_per_stroke * self.load_cycles / 3600 * self.motor_operation_cost
+
+        return speed / cost
