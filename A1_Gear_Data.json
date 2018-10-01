@@ -43,6 +43,9 @@
     "face_width": 0.75,
     "material": "1020 Carbon Steel",
     "cost": 93.37,
+    "geometry_factor": 0.42,
+    "rim_thickness": 1.98,
+    "tooth_height": 0.209,
     "lewis_form_factor": 0.436,
     "elastic_modulus": 30E6,
     "brinell_hardness": 250
@@ -57,6 +60,9 @@
     "face_width": 0.1875,
     "material": "Brass",
     "cost": 14.51,
+    "geometry_factor": 0.23,
+    "rim_thickness": 0.1206,
+    "tooth_height": 0.067,
     "lewis_form_factor": 0.276,
     "elastic_modulus": 15.4E6,
     "brinell_hardness": 200
@@ -71,6 +77,9 @@
     "face_width": 0.1875,
     "material": "303 Stainless Steel",
     "cost": 37.62,
+    "geometry_factor": 0.41,
+    "rim_thickness": 0.932,
+    "tooth_height": 0.0990958,
     "lewis_form_factor": 0.276,
     "elastic_modulus": 28E6,
     "brinell_hardness": 500
@@ -85,6 +94,9 @@
     "face_width": 0.1875,
     "material": "303 Stainless Steel",
     "cost": 36.05,
+    "geometry_factor": 0.405,
+    "rim_thickness": 1.05,
+    "tooth_height": 0.115,
     "lewis_form_factor": 0.421,
     "elastic_modulus": 28E6,
     "brinell_hardness": 500
@@ -99,6 +111,9 @@
     "face_width": 0.25,
     "material": "Brass",
     "cost": 22.88,
+    "geometry_factor": 0.21,
+    "rim_thickness": 0.108,
+    "tooth_height": 0.0882,
     "lewis_form_factor": 0.245,
     "elastic_modulus": 15.4E6,
     "brinell_hardness": 200
