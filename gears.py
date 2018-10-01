@@ -216,7 +216,7 @@ class Gear:
             e = self.train_value(pinion1, gear1, pinion2, gear2)
             T_w = torque / e
 
-            force = T_w / (gear2["pitch_diamter"] / 2)
+            force = T_w / (gear2["pitch_diameter"] / 2)
 
         return force
 
@@ -279,11 +279,13 @@ class Gear:
             d_p = pinion1["pitch_diameter"] if stage == 1 else gear1["pitch_diameter"]
 
             if stage == 1:
+                K_s = self.size_factor(pinion1, gear1, 1)
                 K_v = self.dynamic_factor(pinion1, gear1, None, None, pinion1, 1)
-                sigma = C_p * math.sqrt(W_t * K_o * K_v * K_m / d_p / F * C_f / I)
+                sigma = C_p * math.sqrt(W_t * K_o * K_v * K_s * K_m / d_p / F * C_f / I)
             elif stage == 2:
-                K_v = self.dynamic_factor(pinion1, gear1, None, None, gear1, 1)
-                sigma = C_p * math.sqrt(W_t * K_o * K_v * K_m / d_p / F * C_f / I)
+                K_s = self.size_factor(pinion1, gear1, 2)
+                K_v = self.dynamic_factor(pinion1, gear1, None, None, gear1, 2)
+                sigma = C_p * math.sqrt(W_t * K_o * K_v * K_s * K_m / d_p / F * C_f / I)
         elif stage == 3 or stage == 4:
             W_t = self.tangential_force(pinion2, gear2, None, None)
             F = self.min_face_width(pinion2, gear2)
@@ -333,16 +335,21 @@ class Gear:
         screw_speed = omega_screw / (2 * math.pi) * self.power_screw_pitch
         return screw_speed # In mm/s
 
-
-    # Get the performance metric
-    def performance_metric(self, pinion1, gear1, pinion2, gear2, stage):
+    def system_cost(self, pinion1, gear1, pinion2, gear2):
         speed = self.power_screw_velocity(pinion1, gear1, None, None)
-        seconds_per_stroke = self.stroke_length * 100 / speed
+        seconds_per_stroke = self.stroke_length * 10 / speed
         cost = self.interaction_cost(pinion1, gear1) + seconds_per_stroke * self.load_cycles / 3600 * self.motor_operation_cost
 
         if pinion2 is not None and gear2 is not None:
             speed = self.power_screw_velocity(pinion1, gear1, pinion2, gear2)
-            seconds_per_stroke = self.stroke_length * 100 / speed
+            seconds_per_stroke = self.stroke_length * 10 / speed
             cost = self.interaction_cost(pinion2, gear2) + self.interaction_cost(pinion1, gear1) + seconds_per_stroke * self.load_cycles / 3600 * self.motor_operation_cost
+
+        return cost
+
+    # Get the performance metric
+    def performance_metric(self, pinion1, gear1, pinion2, gear2):
+        speed = self.power_screw_velocity(pinion1, gear1, pinion2, gear2)
+        cost = self.system_cost(pinion1, gear1, pinion2, gear2)
 
         return speed / cost
