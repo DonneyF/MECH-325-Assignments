@@ -71,6 +71,51 @@
 
 \section{Summary}
 
+\subsection{Introduction}
+This report demonstrates the design process of a gear train to operate a 2-stage worm gear and power screw mechanism that is to be used to raise a mass of 2500 kg over a total stroke of 30 cm. The performance metric is determined by the vertical speed of the power screw divided by the total cost of the system. 
+
+\subsection{Final Performance Results}
+Resulting performance metric for our gear train was 0.0230 mm/\$s with a final speed of 5.9093 mm/sec, and a total cost of \$256.69 using a gear ratio of 1:5. 
+
+\subsection{Approach}
+We wrote code to run through all permutations of gear combinations to optimize our system. Starting from the minimum torque required to raise the power screw, assuming a non 100\% efficiency, we determined the total gear ratio from the motor to the worm gear. Parts were selected from McMaster-Carr with the following major assumptions:
+\begin{itemize}
+    \item Spur gear efficiency = 94\%.
+    \item Temperature of gear train < $120^{\circ}$C.
+    \item Hardness of steel = 350HB.
+    \item Appropriate shafts, couplers, bearings would be available.
+    \item Motor size does not affect the system.
+    \item Each element in the system rotates with constant angular speed.
+\end{itemize}
+
+\subsection{Critical Power Screw Results}
+The cornerstone of our design came from the results obtained from our analysis of the power screw for the raising and lowering of the load. We concluded our analysis with the following results:
+
+\begin{center}
+	\begin{tabular}{ |p{4.5cm}||p{2cm}|p{2.5cm}|p{4cm}|  }
+		\hline
+		\multicolumn{4}{|c|}{Parameters} \\
+		\hline
+		Parameter & Power (W) & Torque (Nm) & Vertical Speed (mm/s) \\
+		\hline
+		Power Screw (Raising) & 492.3 & 79.55 & 5.91 \\
+		Power Screw (Lowering) & 305.1 & 32.41 & 8.99 \\
+		\hline
+	\end{tabular}
+\end{center}
+
+\subsection{Gear System Overview}
+Below is an overview diagram of the gear train system we designed for this assignment. The gear attached to the worm gear shaft does not exceed 250mm as required. Since there is a difference between the shaft diameter of the bigger gear and the shaft diameter of the worm gear, a shaft coupler is placed to connect them.
+\begin{center}
+\includegraphics[width=16cm]{MECH325A1System}
+\end{center}
+
+\subsection{Optimization Script}
+To find the most optimal outcome regarding the proposed performance metric, our team decided to create a script which will loop through all permutations of gear combinations and calculate the performance metric for each pair of pinion and gear. The script can be found at the GitHub repository below: \\
+\begin{center}
+    https://github.com/DonneyF/MECH-325-Assignments
+\end{center}
+
 \newpage
 
 \section{Appendix}
@@ -214,8 +259,14 @@ Spur gears are selected for their efficiency, between 94 - 98 \%, and simplicity
 \noindent If only two gears are used, select gear ratio to be at least 1:4.68. If a compound four gear system is appropriate, select gear ratio to be at least 1: 5.0.
 
 \subsection{Motor Speed Calculation}
-The raising and lowering torques for the load are used to compute torque at the motor which in turn gives the motor revolution per minute (rpm) as seen in figure 1. For $\tau_{raise} = 79.5 Nm$, 
-$$\tau_motor = ()$$
+The raising and lowering torques for the load are used to compute torque at the motor which in turn gives the motor revolution per minute (rpm) as seen in figure 1. 
+$$\tau_{\text{motor, raise}} = 79.5 (e)(\text{worm-power screw ratio}) \ (0.94*0.8034) = 2.34 Nm$$
+$$\tau_{\text{motor, lower}} = 32.41 (e)(\text{worm-power screw ratio}) \ (0.94*0.8034) = 0.95 Nm$$
+The worm-power screw ratio is 1/9. From the motor torque-speed curve, $\text{torque} = -\text{speed}/1000.0+5$, the raising rpm is 2659 and lowering rpm is 4050 rpm. 
+
+\subsection{Power screw Speed Calculation}
+The raising and lowering speed of power screw is dependent on motor rpm. 
+
 \subsection{Bending \& Contact Stress Analysis}
 
 Detailed stress analysis was performed on each gear and pinion considered for the design of the gear train. Major stress factors were determined to come from the bending and contact stresses exerted on the gear/pinion system during meshing. The following equation was used calculate and verify the allowable bending stress:
@@ -425,7 +476,7 @@ S_{H(contact)} = \frac{S_c}{\sigma_c}\frac{Z_N C_H}{K_T K_R}
     \end{equation}
     Where $R$ is the reliability factor, out of 1. We determined that a safety factor of 0.98 would be sufficient for our gear system, and thus we obtain a $K_R$ value of 0.955.
     
-    \item \textbf{2.5.5. Temperature Factor ($K_T$):} this factor reflects the limits of temperature values that can be used for proper stress analysis. Since we assume that our gears/pinions never reach a temperature value higher than $120^\circ$C during operation, $K_T$ = 1.
+    \item \textbf{2.5.5. Temperature Factor ($K_T$):} this factor reflects the limits of temperature values that can be used for proper stress analysis. Since we assume that our gears/pinions never reach a temperature value higher than or equal to $120^\circ$C during operation, $K_T$ = 1.
 \end{itemize}
 
 \subsection{Performance Metric Analysis}
