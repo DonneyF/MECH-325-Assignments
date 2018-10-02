@@ -75,21 +75,24 @@
 This report demonstrates the design process of a gear train to operate a 2-stage worm gear and power screw mechanism that raises a mass of 2500 kg over a total stroke of 30 cm. The performance metric is determined by the vertical speed of the power screw divided by the total cost of the system. 
 
 \subsection{Final Performance Results}
-Resulting performance metric for our gear train was 0.0230 mm/\$s with a final raising speed of 5.9093 mm/sec, and a total cost of \$256.69 using a gear ratio of 1:5. 
+Resulting performance metric for our gear train was 0.0230 mm/\$s with a final raising speed of 5.9093 mm/sec and a total cost of \$256.69 using a gear ratio of 1:5. 
 
-\subsection{Approach}
-We wrote code in Python to compute all permutations of gear combinations to optimize our system. Starting from the minimum torque required to raise the power screw, assuming a non 100\% efficiency, we determined the total gear ratio from the motor to the worm gear. Parts were selected from McMaster-Carr with the following major assumptions:
+\subsection{Approach \& Methods}
+Due to the available number of potentially suitable gears and the sheer number of possible permutations, we decided it was best practice to write code in Python to compute the performance metric for any given gear choices. This involved creating a program representation of our system.
+\\\\
+Starting from the minimum torque required to raise the power screw and assuming a sub-100\% efficiency, we determined the total gear ratio from the motor to the worm gear. Parts were selected from McMaster-Carr with the following major assumptions:
 \begin{itemize}
+    \itemsep0em
     \item Spur gear efficiency = 94\%.
     \item Temperature of gear train < $120^{\circ}$C.
-    \item Hardness of steel = 350HB.
+    \item Hardness of carbon steel = 250HB.
     \item Appropriate shafts, couplers, bearings would be available.
     \item Motor size does not affect the system.
     \item Each element in the system rotates with constant angular speed.
     \item 1020 Carbon steel has the same Poisson's ratio as steel
 \end{itemize}
 
-\subsection{Critical Power Screw Results}
+\subsection{Power Screw Results}
 The cornerstone of our design came from the results obtained from our analysis of the power screw for the raising and lowering of the load. We concluded our analysis with the following results:
 
 \begin{center}
@@ -107,9 +110,10 @@ The cornerstone of our design came from the results obtained from our analysis o
 
 \subsection{Gear System Overview}
 Below is an overview diagram of the gear train system we designed for this assignment. The gear attached to the worm gear shaft does not exceed 250mm as required. Since there is a difference between the shaft diameter of the bigger gear and the shaft diameter of the worm gear, a shaft coupler is placed to connect them.
-\begin{center}
+\begin{figure*}[!ht]
 \includegraphics[width=16cm]{MECH325A1System}
-\end{center}
+\caption{Gearbox and power screw apparatus}
+\end{figure*}
 
 \begin{center}
 	\begin{tabular}{ |p{2cm}||p{3cm}|p{3cm}|p{4cm}|  }
@@ -143,18 +147,16 @@ Self-locking is ensured when the coefficient of thread friction is greater than 
 f > \tan(\lambda)
 \end{equation}
 $$\tan\lambda = \frac{l}{\pi d_m} = 0.0335$$
-Since $f = 0.08 > \tan\lambda = 0.03$, the current design is self-locking. \\
-\\
-The torque required to lift the given load with gravitational force $F$ is:
+Since $f = 0.08 > \tan\lambda = 0.03$, the current design is self-locking. The torque required to lift the given load with gravitational force $F$ is:
 
 \begin{equation}
-\tau_{raise} = \frac{Fd_m}{2}\left(\frac{l+\pi f d_m}{\pi d_m - fl}\right)
+\tau_{\text{raise}} = \frac{Fd_m}{2}\left(\frac{l+\pi f d_m}{\pi d_m - fl}\right)
 \end{equation}
 \\
 The torque required to lower the given load with gravitational force $F$ is:
 
 \begin{equation}
-\tau_{lower} = \frac{Fd_m}{2}\left(\frac{\pi f d_m-l}{\pi d_m + fl}\right)
+\tau_{\text{lower}} = \frac{Fd_m}{2}\left(\frac{\pi f d_m-l}{\pi d_m + fl}\right)
 \end{equation}
 
 
@@ -231,7 +233,7 @@ The motor provided has the following torque-speed curve. The maximum power outpu
 \addplot [
     domain=0:5000, 
     samples=100, 
-    color=blue,
+    color=blue, dashed
     ]
     {-x/1000.0+5};
 \end{axis}
@@ -258,7 +260,7 @@ The motor provided has the following torque-speed curve. The maximum power outpu
      ]
    \end{axis}
 \end{tikzpicture}
-\caption{Torque and power curve for chosen motor. Blue shows the torque and red shows the power output. Power is maximized at 2500 RPM.}
+\caption{Torque and power curve for chosen motor. The dotted line shows the torque and continuous line shows the power output. Power is maximized at 2500 RPM.}
 \end{figure}
 \noindent The relationship to determine train value given torque specifications, $e$ is:
 \begin{equation}
@@ -271,28 +273,34 @@ Spur gears are selected for their efficiency, between 94 - 98 \%, and simplicity
 \text{(compound four-gear system)} \indent\indent &e = (0.227)(0.94)^2 = 0.2 
 \end{eqnarray}
 
-\noindent If only two gears are used, select gear ratio to be at least 1:4.68. If a compound four gear system is appropriate, select gear ratio to be at least 1: 5.0.
+\noindent If only two gears are used, select gear ratio to be at least 1:4.68. If a compound four gear system is appropriate, select gear ratio to be at least 1:5.
+\\\\
+Because we chose a two-gear system, the total efficiency of our gearbox is:
+$$ \eta_{\text{gearbox}} = \eta_{\text{worm}} \cdot f_g = 75.5\%$$
 
 \subsection{Motor Speed Calculation}
 The raising and lowering torques for the load are used to compute torque at the motor which in turn gives the motor revolution per minute (rpm) as seen in figure 1. 
-$$\tau_{\text{motor, raise}} = 79.5 (e)(\text{worm-power screw ratio}) \ (0.94*0.8034) = 2.34 Nm$$
-$$\tau_{\text{motor, lower}} = 32.41 (e)(\text{worm-power screw ratio}) \ (0.94*0.8034) = 0.95 Nm$$
-The worm-power screw ratio is 1/9, 0.94 is spur gear efficiency, and 0.8034 is worm gear efficiency. From the motor torque-speed curve, $$\text{torque} = -\text{speed}/1000.0+5$$ the raising rpm is 2659 and lowering rpm is 4050 rpm. 
+$$\tau_{\text{motor, raise}} = 79.5 (e)(\text{worm-power screw ratio}) / \eta_{\text{gearbox}} = 2.34 \text{ Nm}$$
+$$\tau_{\text{motor, lower}} = 32.41 (e)(\text{worm-power screw ratio}) / \eta_{\text{gearbox}} = 0.95 \text{ Nm}$$
+The worm-power screw ratio is 1/9. From the motor torque-speed curve, $$\text{torque} = -\text{speed}/1000.0+5$$ The raising RPM is 2659 and lowering RPM is 4050 RPM. 
 
 \subsection{Power Screw Speed Calculation}
 The raising and lowering speed of power screw is dependent on motor rpm. Given gear train value, $e = 1/5$, 
-$$\omega_{motor} = \text{rpm} (2\pi/60)$$
-$$\omega_{worm} = e \omega_{motor}$$
-$$\omega_{screw} = \omega_{worm} (1/9)$$
-$$\text{screw speed} = \omega_{screw}(6mm)/ (2 \pi)$$
-The worm-power screw ratio is $1/9$, power screw pitch is $6mm$, and $2\pi/60$ converts rpm to radians per second. Given the rpm found in section 2.4, we obtain raising speed of $5.91 mm/s$ and lowering speed of $8.99 mm/s$.
-
+$$\omega_{\text{motor}} = \text{rpm} (2\pi/60)$$
+$$\omega_{\text{worm}} = e \omega_{\text{motor}}$$
+$$\omega_{\text{screw}} = \omega_{\text{worm}} (1/9)$$
+$$\text{screw speed} = \omega_{\text{screw}}(6mm)/ (2 \pi)$$
+The worm-power screw ratio is $1/9$, power screw pitch is $6mm$, and $2\pi/60$ converts rpm to radians per second. Given the rpm found in section 2.4, we obtain raising speed of $5.91 mm/s$ and lowering speed of $8.99 mm/s$. \\\\
+We then calculate the power required to raise and lower the load by the following formula:
+\begin{equation}
+    P = T \omega = \dfrac{2\pi \times \text{vertical velocity} \times T}{\text{Pitch}}
+\end{equation}
 \subsection{Bending \& Contact Stress Analysis}
 
 Detailed stress analysis was performed on each gear and pinion considered for the design of the gear train. Major stress factors were determined to come from the bending and contact stresses exerted on the gear/pinion system during meshing. The following equation was used calculate and verify the allowable bending stress:
 
 \begin{equation}
-\sigma_{bending} = W^t K_o K_v K_s \frac{P_d}{F}\frac{K_s K_B}{J} \\
+\sigma_{\text{bending}} = W^t K_o K_v K_s \frac{P_d}{F}\frac{K_s K_B}{J} \\
 \end{equation}
 
 \begin{center}
@@ -318,7 +326,7 @@ Detailed stress analysis was performed on each gear and pinion considered for th
 \noindent The contact stress measurement was taken into account by the following equation, along with the following new parameters:
 
 \begin{equation}
-\sigma_{contact} = C_{p}\sqrt{W^t K_o K_v K_s \frac{K_m}{d_P F}\frac{C_f}{I}}
+\sigma_{\text{contact}} = C_{p}\sqrt{W^t K_o K_v K_s \frac{K_m}{d_P F}\frac{C_f}{I}}
 \end{equation}
 
 \begin{center}
@@ -349,17 +357,17 @@ Detailed stress analysis was performed on each gear and pinion considered for th
 
 \noindent Here we will discuss the relevant formulas, equations, and references utilized to obtain parameter values found in the bending and contact stress equations. Note that all references to table and figure numbers are from Shigley's Mechanical Engineering Design Textbook.
 \begin{itemize}[leftmargin=3mm]
-    \item \textbf{2.4.1. Transmitted Load ($W^t$):} this parameter represents the load transmitted onto the teeth of the gear and pinion during their interaction. The transmitted load is calculated by finding the motor torque exerted on the pinion, finding the pitch diameter of the pinion, and then applying torque analysis, namely $T = Fr$ to find the transmitted force.
+    \item \textbf{2.6.1. Transmitted Load ($W^t$):} this parameter represents the load transmitted onto the teeth of the gear and pinion during their interaction. The transmitted load is calculated by finding the motor torque exerted on the pinion, finding the pitch diameter of the pinion, and then applying torque analysis, namely $T = Fr$ to find the transmitted force.
     
-    \item \textbf{2.4.2. Bending-Strength Geometry Factor ($J$):} this factor is used to determine the bending strength of the spur gear teeth. Values for $J$ were directly read off of Figure 14-6 in Shigley's, and were determined based on the number of teeth on the gear and pinion.
+    \item \textbf{2.6.2. Bending-Strength Geometry Factor ($J$):} this factor is used to determine the bending strength of the spur gear teeth. Values for $J$ were directly read off of Figure 14-6 in Shigley's, and were determined based on the number of teeth on the gear and pinion.
     
-    \item \textbf{2.4.3. Surface-Strength Geometry Factor ($I$):} this factor is used to determine the pitting resistance of the spur gear teeth. The surface-strength geometry factor is defined as follows:
+    \item \textbf{2.6.3. Surface-Strength Geometry Factor ($I$):} this factor is used to determine the pitting resistance of the spur gear teeth. The surface-strength geometry factor is defined as follows:
     \begin{equation}
         I = \dfrac{\cos\phi_t \sin\phi_t}{2m_N} \dfrac{m_G}{m_G + 1}
     \end{equation}
     Where $\phi_t$ is the transverse pressure angle, $m_N$ is the load sharing ratio (1 for spur gears), and $m_G$ is the gear ratio.
     
-    \item \textbf{2.4.4. Elastic Coefficient ($C_f$):} this factor is used to represent elastic properties of the pinion and gear during teeth interaction and meshing. The elastic coefficient is defined as follows:
+    \item \textbf{2.6.4. Elastic Coefficient ($C_f$):} this factor is used to represent elastic properties of the pinion and gear during teeth interaction and meshing. The elastic coefficient is defined as follows:
     
     \begin{equation}
         C_p = \left[\dfrac{1}{\pi \left(\dfrac{1-v_P^2}{E_P} + \dfrac{1 - v_G^2}{E_G}\right)}\right]^2
@@ -367,7 +375,7 @@ Detailed stress analysis was performed on each gear and pinion considered for th
     
     Where $v_P$, $v_G$ are the Poisson's ratio of the pinion and gear respectively, and $E_P$ and $E_G$ are the Modulus of Elasticity of the pinion and gear respectively. Based on Table 14-8 in Shigley's, the Poisson's ratio of the pinion and gear were determined to be at 0.30, and since the material for the pinion of gear is steel, the Modulus of Elasticity is $30 \times 10^6$ $\text{lbf/in}^2$ for both. 
     
-    \item \textbf{2.4.5. Dynamic Factor ($K_v$):} this factor is used to account for inaccuracies in the manufacture and meshing of gear teeth in action. The dynamic factor is defined as follows:
+    \item \textbf{2.6.5. Dynamic Factor ($K_v$):} this factor is used to account for inaccuracies in the manufacture and meshing of gear teeth in action. The dynamic factor is defined as follows:
     \begin{equation}
         K_v = \left(\dfrac{A + \sqrt{V}}{A}\right)^B
     \end{equation}
@@ -378,17 +386,17 @@ Detailed stress analysis was performed on each gear and pinion considered for th
     \end{align*}
     Where $Q_v$ is the AGMA transmission accuracy number. For our analysis, we decided to use a $Q_v$ value of 5 since 3-7 is the range for commercial use.
     
-    \item \textbf{2.4.6. Overload Factor ($K_o$):} this factor is used to make allowance for all externally applied loads in excess of the nominal tangential load $W^t$. The value for $K_o$ was determined using Figures 14-17 and 14-18, from which a value of 1.75 was obtained since we are assuming there will be an initial shock with uniform motion for the raising and lowering of the power screw system.
+    \item \textbf{2.6.6. Overload Factor ($K_o$):} this factor is used to make allowance for all externally applied loads in excess of the nominal tangential load $W^t$. The value for $K_o$ was determined using Figures 14-17 and 14-18, from which a value of 1.75 was obtained since we are assuming there will be an initial shock with uniform motion for the raising and lowering of the power screw system.
     
-    \item \textbf{2.4.7. Surface Condition Factor ($C_f$):} this factor is used to represent any defects in the gear surface, which could have been caused by residual stress, poor surface finishing, or plastic effects. Since we assume the new gears and pinions purchased to be in good condition, we assign a value of 1 to $C_f$.
+    \item \textbf{2.6.7. Surface Condition Factor ($C_f$):} this factor is used to represent any defects in the gear surface, which could have been caused by residual stress, poor surface finishing, or plastic effects. Since we assume the new gears and pinions purchased to be in good condition, we assign a value of 1 to $C_f$.
     
-    \item \textbf{2.4.8. Size Factor ($K_s$):} this factor reflects the non-uniformity of material properties due to size. The size factor is defined as follows:
+    \item \textbf{2.6.8. Size Factor ($K_s$):} this factor reflects the non-uniformity of material properties due to size. The size factor is defined as follows:
     \begin{equation}
         K_s = 1.192 \left(\dfrac{F \sqrt{Y}}{P}\right)^{0.0535}
     \end{equation}
     Where $F$ is the face width of the narrowest member, $Y$ is the Lewis Form Factor of the gear/pinion, and $P$ is the diametral pitch. Values for $Y$ was determined using Table 14-2.
     
-    \item \textbf{2.4.9. Load-Distribution Factor ($K_m$):} this factor reflects nonuniform distribution of load across the line of contact. The load-distribution factor is defined as follows:
+    \item \textbf{2.6.9. Load-Distribution Factor ($K_m$):} this factor reflects nonuniform distribution of load across the line of contact. The load-distribution factor is defined as follows:
     \begin{equation}
         K_m = 1 + C_{mc}(C_{pf}C_{pm} + C_{ma}C_{e})
     \end{equation}
@@ -407,13 +415,13 @@ Detailed stress analysis was performed on each gear and pinion considered for th
     \end{equation*}
     Where $A$, $B$, and $C$ are constants obtained from Table 14-9. We decided to use commercial-grade conditioning for our gears/pinions, and set $A$ = 0.127, $B$ = 0.0158, and $C$ = -0.930($10^{-4}$).
     
-    \item \textbf{2.4.10. Rim-Thickness Factor ($K_B$):} this factor represents is the ratio of rim thickness $t_R$ and tooth height $h_t$. We downloaded the CAD model and measured the respective distances to obtain the backup ratio: 
+    \item \textbf{2.6.10. Rim-Thickness Factor ($K_B$):} this factor represents is the ratio of rim thickness $t_R$ and tooth height $h_t$. We downloaded the CAD model and measured the respective distances to obtain the backup ratio: 
     \begin{equation*}
     m_B = \frac{t_R}{h_t}
     \end{equation*}
     We obtain the following:
     \begin{equation*}
-        m_{B_{\text{pinion}}} &= \frac{ 0.421875}{0.140625} = 3, \text{ }m_{B_{\text{gear}}} &= \frac{ 0.421875}{0.140625} = 9.5
+        m_{B_{\text{pinion}}} = \frac{ 0.421875}{0.140625} = 3, \text{ }m_{B_{\text{gear}}} = \frac{ 0.421875}{0.140625} = 9.5
     \end{equation*}
     Since all $m_B \geq 1.2$, $K_B = 1$.
 
@@ -423,10 +431,10 @@ Detailed stress analysis was performed on each gear and pinion considered for th
 To ensure the gear train system maintains an acceptable level of safety (2.2 minimum), bending and contact safety factors were calculated to validate design specifications.
 
 \begin{equation}
-S_{F(bending)} = \frac{S_t}{\sigma_b}\frac{Y_N}{K_T K_R} \\
+S_{F(\text{bending})} = \frac{S_t}{\sigma_b}\frac{Y_N}{K_T K_R} \\
 \end{equation}
 \begin{equation}
-S_{H(contact)} = \frac{S_c}{\sigma_c}\frac{Z_N C_H}{K_T K_R}
+S_{H(\text{contact})} = \frac{S_c}{\sigma_c}\frac{Z_N C_H}{K_T K_R}
 \end{equation}
 
 \begin{center}
@@ -452,29 +460,29 @@ S_{H(contact)} = \frac{S_c}{\sigma_c}\frac{Z_N C_H}{K_T K_R}
 \noindent From our analysis, we obtain the following: 
 
 \begin{align*}
-    S_F_{\text{gear}} &= 14.27 \\
-    S_H_{\text{gear}} &= 5.37 \\
-    S_F_{\text{pinion}} &= 9.27 \\
-    S_H_{\text{pinion}} &= 2.414
+    S_{F_{\text{gear}}} &= 14.27 \\
+    S_{H_{\text{gear}}} &= 5.37 \\
+    S_{F_{\text{pinion}}} &= 9.27 \\
+    S_{H_{\text{pinion}}} &= 2.414
 \end{align*}
 
 \noindent Here we will discuss the relevant formulas, equations, and references utilized to obtain parameter values found in the safety factor equations. Note that all references to table and figure numbers are from Shigley's Mechanical Engineering Design Textbook.
 \begin{itemize}[leftmargin=3mm]
-    \item \textbf{2.5.1. Allowable Bending/Contact Stress Number ($S_t$, $S_c$):} this parameter represents AGMA defined stress numbers, obtained from Figures 14-2 and 14-5. Since we are using Grade 1 steel gears/pinions, we are able to calculate the stress numbers using the following:
+    \item \textbf{2.7.1. Allowable Bending/Contact Stress Number ($S_t$, $S_c$):} this parameter represents AGMA defined stress numbers, obtained from Figures 14-2 and 14-5. Since we are using Grade 1 steel gears/pinions, we are able to calculate the stress numbers using the following:
     \begin{align*}
         S_t &= 77.3\text{ }H_B + 12800 \text{ psi} \\
         S_c &= 322\text{ }H_B + 29100 \text{ psi}
     \end{align*}
     Where $H_B$ is the Brinell Hardness of the steel gears/pinions.
     
-    \item \textbf{2.5.2. Stress-Cycle Factors} ($Y_N$ and $Z_N$): this factor reflects the number of load cycles the gear/pinion can sustain through. From Figures 14-14 and 14-15, we can calculate $Y_N$ and $Z_N$ by the following:
+    \item \textbf{2.7.2. Stress-Cycle Factors} ($Y_N$ and $Z_N$): this factor reflects the number of load cycles the gear/pinion can sustain through. From Figures 14-14 and 14-15, we can calculate $Y_N$ and $Z_N$ by the following:
     \begin{align*}
         Y_N &= 6.1514 N^{-0.1192} \\
         Z_N &= 2.466 N^{-0.056}
     \end{align*}
     Where N is the number of load cycles, which is a minimum of $2 \times 10^4$ in this case.
     
-    \item \textbf{2.5.3. Hardness-Ratio Factor ($C_H$):} this factor is used to account for the effect obtained when a surface-hardened pinion is mated with a through-hardened gear, and adjust the surface strengths for this effect. The hardness-ratio factor is defined as follows:
+    \item \textbf{2.7.3. Hardness-Ratio Factor ($C_H$):} this factor is used to account for the effect obtained when a surface-hardened pinion is mated with a through-hardened gear, and adjust the surface strengths for this effect. The hardness-ratio factor is defined as follows:
     \begin{equation}
         C_H = 1.0 + A'(m_G = 1.0)
     \end{equation}
@@ -487,38 +495,38 @@ S_{H(contact)} = \frac{S_c}{\sigma_c}\frac{Z_N C_H}{K_T K_R}
         \dfrac{H_{BP}}{H_{BG}} &< 1.2, \text{ $A' = 0$} \\
         \dfrac{H_{BP}}{H_{BG}} &> 1.7, \text{ $A' = 0.00698$}
     \end{align*}
-    The terms $H_{BP}$ and $H_{BG}$ are the Brinell hardness of the pinion and gear, respectively. Since we are using steel material, the Brinell hardness of both the pinion and gear are 350 HB as described in the assignment document. \\\\
-    Therefore, the ratio of Brinell hardness is less than 1, from which we obtain that $A' = 0$. Therefore, $C_H = 1$.
+    The terms $H_{BP}$ and $H_{BG}$ are the Brinell hardness of the pinion and gear, respectively. Since we are using carbon steel material, the Brinell hardness of both the pinion and gear was found to be 250 HB. \\\\
+    Therefore, the ratio of Brinell hardness is 1, from which we obtain that $A' = 0$. Therefore, $C_H = 1$.
     
-    \item \textbf{2.5.4. Reliability Factor ($K_R$):} this factor accounts for the effect of the statistical distributions of material fatigue failures. The reliability factor is defined as follows:
+    \item \textbf{2.7.4. Reliability Factor ($K_R$):} this factor accounts for the effect of the statistical distributions of material fatigue failures. The reliability factor is defined as follows:
     \begin{equation}
     K_R = 0.658-0.0759\ln{(1-R)}
     \end{equation}
     Where $R$ is the reliability factor, out of 1. We determined that a safety factor of 0.98 would be sufficient for our gear system, and thus we obtain a $K_R$ value of 0.955.
     
-    \item \textbf{2.5.5. Temperature Factor ($K_T$):} this factor reflects the limits of temperature values that can be used for proper stress analysis. Since we assume that our gears/pinions never reach a temperature value higher than or equal to $120^\circ$C during operation, $K_T$ = 1.
+    \item \textbf{2.7.5. Temperature Factor ($K_T$):} this factor reflects the limits of temperature values that can be used for proper stress analysis. Since we assume that our gears/pinions never reach a temperature value higher than or equal to $120^\circ$C during operation, $K_T$ = 1.
 \end{itemize}
 
 \subsection{Performance Metric Analysis}
 
 \begin{itemize}[leftmargin=3mm]
     \item \textbf{2.8.1. Total Cost Analysis:} the total cost of the system was calculated as follows:
-    \begin{equation}
-    Cost_{total} = Cost_{gear} + Cost_{pinion} + Cost_{motor runtime} 
-    \end{equation}
-    the cost of the gears were obtained from McMaster-Carr and were as follows:
-    \begin{equation}
-    Cost_{gear} = \$93.37
-    \end{equation}
-    \begin{equation}
-    Cost_{pinion} = \$23.10
-    \end{equation}
+    \begin{equation*}
+    \text{Cost}_{total} = \text{Cost}_{\text{gear}} + \text{Cost}_{\text{pinion}} + \text{Cost}_{\text{motor runtime}} 
+    \end{equation*}
+    The cost of the gears were obtained from McMaster-Carr and were as follows:
+    \begin{equation*}
+    \text{Cost}_{\text{gear}} = \$93.37
+    \end{equation*}
+    \begin{equation*}
+    \text{Cost}_{\text{pinion}} = \$23.10
+    \end{equation*}
     The cost of the motor runtime was calculated as follows:
+    \begin{equation*}
+        \text{Cost}_{\text{motor runtime}} = \left(\frac{d_{\text{stroke}}}{V_{\text{raising}}}+\frac{d_{\text{stroke}}}{V_{\text{lowering}}}\right)\left(\text{Cost}_{\text{per hour}}\right)\left(\frac{1_{\text{hour}}}{3600_{\text{seconds}}}\right)\left(N_{\text{cycles}}\right)
+    \end{equation*}
     \begin{equation}
-        Cost_{motor runtime} = \left(\frac{d_{stroke}}{V_{raising}}+\frac{d_{stroke}}{V_{lowering}}\right)\left(Cost_{per hour}\right)\left(\frac{1_{hour}}{3600_{seconds}}\right)\left(N_{cycles}\right)
-    \end{equation}
-    \begin{equation}
-        Cost_{motor runtime} = \$140.22
+        \text{Cost}_{\text{motor runtime}} = \$140.22
     \end{equation}
     
     Therefore, the total cost of the system was calculated to be \$256.69.
@@ -526,15 +534,15 @@ S_{H(contact)} = \frac{S_c}{\sigma_c}\frac{Z_N C_H}{K_T K_R}
     \item \textbf{2.8.2. Performance Metric Analysis:}
     the final metric for the system was defined to be:
     \begin{equation}
-        metric = \frac{V_{raising}}{Cost_{total}}
+        \text{metric} = \frac{V_{\text{raising}}}{\text{Cost}_{\text{total}}}
     \end{equation}
     
-    where: 
+    Where: 
     \begin{itemize}
-        \item $V_{raising}$ is the speed with which the power screw raises the load, measured in $\frac{mm}{s}$,
-        \item $Cost_{total}$ is the total cost of the system, measured in $\$$
+        \item $V_{\text{raising}}$ is the speed with which the power screw raises the load, measured in $\frac{text{mm}}{s}$,
+        \item $Cost_{\text{total}}$ is the total cost of the system, measured in $\$$
     \end{itemize}
-
-The final performance metric of our system was found to be 0.0230 $\frac{mm}{\$s}$.
+\end{itemize}
+The final performance metric of our system was found to be 0.0230 $\dfrac{\text{mm}}{\$s}$.
 
 \end{document}
