@@ -72,13 +72,13 @@
 \section{Summary}
 
 \subsection{Introduction}
-This report demonstrates the design process of a gear train to operate a 2-stage worm gear and power screw mechanism that is to be used to raise a mass of 2500 kg over a total stroke of 30 cm. The performance metric is determined by the vertical speed of the power screw divided by the total cost of the system. 
+This report demonstrates the design process of a gear train to operate a 2-stage worm gear and power screw mechanism that raises a mass of 2500 kg over a total stroke of 30 cm. The performance metric is determined by the vertical speed of the power screw divided by the total cost of the system. 
 
 \subsection{Final Performance Results}
-Resulting performance metric for our gear train was 0.0230 mm/\$s with a final speed of 5.9093 mm/sec, and a total cost of \$256.69 using a gear ratio of 1:5. 
+Resulting performance metric for our gear train was 0.0230 mm/\$s with a final raising speed of 5.9093 mm/sec, and a total cost of \$256.69 using a gear ratio of 1:5. 
 
 \subsection{Approach}
-We wrote code to run through all permutations of gear combinations to optimize our system. Starting from the minimum torque required to raise the power screw, assuming a non 100\% efficiency, we determined the total gear ratio from the motor to the worm gear. Parts were selected from McMaster-Carr with the following major assumptions:
+We wrote code in Python to compute all permutations of gear combinations to optimize our system. Starting from the minimum torque required to raise the power screw, assuming a non 100\% efficiency, we determined the total gear ratio from the motor to the worm gear. Parts were selected from McMaster-Carr with the following major assumptions:
 \begin{itemize}
     \item Spur gear efficiency = 94\%.
     \item Temperature of gear train < $120^{\circ}$C.
@@ -86,6 +86,7 @@ We wrote code to run through all permutations of gear combinations to optimize o
     \item Appropriate shafts, couplers, bearings would be available.
     \item Motor size does not affect the system.
     \item Each element in the system rotates with constant angular speed.
+    \item 1020 Carbon steel has the same Poisson's ratio as steel
 \end{itemize}
 
 \subsection{Critical Power Screw Results}
@@ -109,6 +110,20 @@ Below is an overview diagram of the gear train system we designed for this assig
 \begin{center}
 \includegraphics[width=16cm]{MECH325A1System}
 \end{center}
+
+\begin{center}
+	\begin{tabular}{ |p{2cm}||p{3cm}|p{3cm}|p{4cm}|  }
+		\hline
+		\multicolumn{4}{|c|}{Gear Information (McMaster-Carr)} \\
+		\hline
+		Gear Type & Teeth Number & Price & Reference Number \\
+		\hline
+		Pinion & 16 & 23.1 & 5172T21 \\
+		Gear & 80 & 93.37 & 5172T25 \\
+		\hline
+	\end{tabular}
+\end{center}
+
 
 \subsection{Optimization Script}
 To find the most optimal outcome regarding the proposed performance metric, our team decided to create a script which will loop through all permutations of gear combinations and calculate the performance metric for each pair of pinion and gear. The script can be found at the GitHub repository below: \\
@@ -262,10 +277,15 @@ Spur gears are selected for their efficiency, between 94 - 98 \%, and simplicity
 The raising and lowering torques for the load are used to compute torque at the motor which in turn gives the motor revolution per minute (rpm) as seen in figure 1. 
 $$\tau_{\text{motor, raise}} = 79.5 (e)(\text{worm-power screw ratio}) \ (0.94*0.8034) = 2.34 Nm$$
 $$\tau_{\text{motor, lower}} = 32.41 (e)(\text{worm-power screw ratio}) \ (0.94*0.8034) = 0.95 Nm$$
-The worm-power screw ratio is 1/9. From the motor torque-speed curve, $\text{torque} = -\text{speed}/1000.0+5$, the raising rpm is 2659 and lowering rpm is 4050 rpm. 
+The worm-power screw ratio is 1/9, 0.94 is spur gear efficiency, and 0.8034 is worm gear efficiency. From the motor torque-speed curve, $$\text{torque} = -\text{speed}/1000.0+5$$ the raising rpm is 2659 and lowering rpm is 4050 rpm. 
 
-\subsection{Power screw Speed Calculation}
-The raising and lowering speed of power screw is dependent on motor rpm. 
+\subsection{Power Screw Speed Calculation}
+The raising and lowering speed of power screw is dependent on motor rpm. Given gear train value, $e = 1/5$, 
+$$\omega_{motor} = \text{rpm} (2\pi/60)$$
+$$\omega_{worm} = e \omega_{motor}$$
+$$\omega_{screw} = \omega_{worm} (1/9)$$
+$$\text{screw speed} = \omega_{screw}(6mm)/ (2 \pi)$$
+The worm-power screw ratio is $1/9$, power screw pitch is $6mm$, and $2\pi/60$ converts rpm to radians per second. Given the rpm found in section 2.4, we obtain raising speed of $5.91 mm/s$ and lowering speed of $8.99 mm/s$.
 
 \subsection{Bending \& Contact Stress Analysis}
 
@@ -285,7 +305,7 @@ Detailed stress analysis was performed on each gear and pinion considered for th
 		$W^t$ & lbf & 41.612 & 41.612 & Tangential transmitted load\\
 		$K_o$ & N/A & 1.75 & 1.75 & Overload factor\\
 		$K_v$ & N/A & 1.433 & 1.433 & Dynamic factor\\
-		$K_s$ & N/A & 0.980 & 0.980 & Size factor\\
+		$K_s$ & N/A & 0.990 & 0.980 & Size factor\\
 		$P_{d}$ & 1/in & 16 & 16 & Transverse diametral pitch\\
 		$F$ & in & 0.75 & 0.75 & Face Width of narrower member\\
 		$K_m$ & N/A & 1.188 & 1.188 & Load-distribution factor\\
@@ -481,6 +501,40 @@ S_{H(contact)} = \frac{S_c}{\sigma_c}\frac{Z_N C_H}{K_T K_R}
 
 \subsection{Performance Metric Analysis}
 
+\begin{itemize}[leftmargin=3mm]
+    \item \textbf{2.8.1. Total Cost Analysis:} the total cost of the system was calculated as follows:
+    \begin{equation}
+    Cost_{total} = Cost_{gear} + Cost_{pinion} + Cost_{motor runtime} 
+    \end{equation}
+    the cost of the gears were obtained from McMaster-Carr and were as follows:
+    \begin{equation}
+    Cost_{gear} = \$93.37
+    \end{equation}
+    \begin{equation}
+    Cost_{pinion} = \$23.10
+    \end{equation}
+    The cost of the motor runtime was calculated as follows:
+    \begin{equation}
+        Cost_{motor runtime} = \left(\frac{d_{stroke}}{V_{raising}}+\frac{d_{stroke}}{V_{lowering}}\right)\left(Cost_{per hour}\right)\left(\frac{1_{hour}}{3600_{seconds}}\right)\left(N_{cycles}\right)
+    \end{equation}
+    \begin{equation}
+        Cost_{motor runtime} = \$140.22
+    \end{equation}
+    
+    Therefore, the total cost of the system was calculated to be \$256.69.
+    \\
+    \item \textbf{2.8.2. Performance Metric Analysis:}
+    the final metric for the system was defined to be:
+    \begin{equation}
+        metric = \frac{V_{raising}}{Cost_{total}}
+    \end{equation}
+    
+    where: 
+    \begin{itemize}
+        \item $V_{raising}$ is the speed with which the power screw raises the load, measured in $\frac{mm}{s}$,
+        \item $Cost_{total}$ is the total cost of the system, measured in $\$$
+    \end{itemize}
 
+The final performance metric of our system was found to be 0.0230 $\frac{mm}{\$s}$.
 
 \end{document}
