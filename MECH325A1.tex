@@ -255,7 +255,100 @@ Detailed stress analysis was performed on each gear and pinion considered for th
 	\end{tabular}
 \end{center}
 
-\noindent\textbf{Note:} Many of the factors are constants that were obtained from reading values off graphs and tables. Other values depend on the material, geometry, and physical properties of the gear and pinion. Furthermore, all the parameters in the stress equations are in U.S. customary units.
+\noindent\textbf{Note:} Many of the factors are constants that were obtained from reading values off graphs and tables. Other values depend on the material, geometry, and physical properties of the gear and pinion. Furthermore, all the parameters in the stress equations are in U.S. customary units. \\
+
+\noindent Here we will discuss the relevant formulas, equations, and references utilized to obtain parameter values found in the bending and contact stress equations. Note that all references to table and figure numbers are from Shigley's Mechanical Engineering Design Textbook.
+\begin{itemize}
+    \item \textbf{2.5.1. Bending-Strength Geometry Factor ($J$):} this factor is used to determine the bending strength of the spur gear teeth. Values for $J$ were directly read off of Figure 14-6 in Shigley's, and were determined based on the number of teeth on the gear and pinion.
+    
+    \item \textbf{2.5.2. Surface-Strength Geometry Factor ($I$):} this factor is used to determine the pitting resistance of the spur gear teeth. The surface-strength geometry factor is defined as follows:
+    \begin{equation}
+        I = \dfrac{\cos\phi_t \sin\phi_t}{2m_N} \dfrac{m_G}{m_G + 1}
+    \end{equation}
+    Where $\phi_t$ is the transverse pressure angle, $m_N$ is the load sharing ratio (1 for spur gears), and $m_G$ is the gear ratio.
+    
+    \item \textbf{2.5.3. Elastic Coefficient ($C_f$):} this factor is used to represent elastic properties of the pinion and gear during teeth interaction and meshing. The elastic coefficient is defined as follows:
+    
+    \begin{equation}
+        C_p = \left[\dfrac{1}{\pi \left(\dfrac{1-v_P^2}{E_P} + \dfrac{1 - v_G^2}{E_G}\right)}\right]^2
+    \end{equation}
+    
+    Where $v_P$, $v_G$ are the Poisson's ratio of the pinion and gear respectively, and $E_P$ and $E_G$ are the Modulus of Elasticity of the pinion and gear respectively. Based on Table 14-8 in Shigley's, the Poisson's ratio of the pinion and gear were determined to be at 0.30, and since the material for the pinion of gear is steel, the Modulus of Elasticity is 30 \times $10^6$ lbf/in$^2$ for both. 
+    
+    \item \textbf{2.5.4. Dynamic Factor ($K_v$):} this factor is used to account for inaccuracies in the manufacture and meshing of gear teeth in action. The dynamic factor is defined as follows:
+    \begin{equation}
+        K_v = \left(\dfrac{A + \sqrt{V}}{A}\right)^B
+    \end{equation}
+    Where the constants are defined as:
+    \begin{align*}
+        A &= 50 + 56(1-B) \\
+        B &= 0.25(12-Q_v)^{2/3}
+    \end{align*}
+    Where $Q_v$ is the AGMA transmission accuracy number. For our analysis, we decided to use a $Q_v$ value of 5 since 3-7 is the range for commercial use.
+    
+    \item \textbf{2.5.5. Overload Factor ($K_o$):} this factor is used to make allowance for all externally applied loads in excess of the nominal tangential load $W^t$. The value for $K_o$ was determined using Figures 14-17 and 14-18, from which a value of 1 was obtained since we are assuming uniform motion for the raising and lowering of the power screw system.
+    
+    \item \textbf{2.5.6. Surface Condition Factor ($C_f$):} this factor is used to represent any defects in the gear surface, which could have been caused by residual stress, poor surface finishing, or plastic effects. Since we assume the new gears and pinions purchased to be in good condition, we assign a value of 1 to $C_f$.
+    
+    \item \textbf{2.5.7. Size Factor ($K_s$):} this factor reflects the non-uniformity of material properties due to size. The size factor is defined as follows:
+    \begin{equation}
+        K_s = 1.192 \left(\dfrac{F \sqrt{Y}}{P}\right)^{0.0535}
+    \end{equation}
+    Where $F$ is the face width of the narrowest member, $Y$ is the Lewis Form Factor of the gear/pinion, and $P$ is the diametral pitch. Values for $Y$ was determined using Table 14-2.
+    
+    \item \textbf{2.5.8. Load-Distribution Factor ($K_m$):} this factor reflects nonuniform distribution of load across the line of contact. The load-distribution factor is defined as follows:
+    \begin{equation}
+        K_m = 1 + C_{mc}(C_{pf}C_{pm} + C_{ma}C_{e})
+    \end{equation}
+    Where $C_{mc} = 1$ since we are using gears/pinions with uncrowned teeth, $C_{pm} = 1$ since the ratio between then pinion offset from center span, $S_1$, and bearing span, $S$, is less than 0.175, and $C_e = 1$ since our pinions/gears are not adjusted at assembly. \\\\
+    $C_{pf}$ is defined as follows: 
+    \begin{equation}
+    C_{pf} = \begin{cases} 
+	\frac{F}{10d} - 0.025 & F $\leq$ 1 \text{ in} \\
+	\frac{F}{10d} -0.0375+0.0125F & 1 < F $\leq$ 17 \text{ in}
+	\end{cases} 
+	\end{equation}
+    Where $F$ is the minimum face width of the narrowest member and $d$ is the pitch diameter. \\\\
+    Next, we calculate $C_{ma}$ as follows:
+    \begin{equation*}
+        C_{ma} = A + BF + CF^2
+    \end{equation*}
+    Where $A$, $B$, and $C$ are constants obtained from Table 14-9. We decided to use commercial-grade conditioning for our gears/pinions, and set $A$ = 0.127, $B$ = 0.0158, and $C$ = -0.930($10^{-4}$).
+    
+    \item \textbf{2.5.9. Hardness-Ratio Factor ($C_H$):} this factor is used to account for the effect obtained when a surface-hardened pinion is mated with a through-hardened gear, and adjust the surface strengths for this effect. The hardness-ratio factor is defined as follows:
+    \begin{equation}
+        C_H = 1.0 + A'(m_G = 1.0)
+    \end{equation}
+    Where:
+    \begin{equation*}
+        A' = 8.98(10^{-3})\left(\dfrac{H_{BP}}{H_{BG}}\right) - 8.29(10^{-3})\text{ }1.2 \leq \frac{H_{BP}}{H_{BG}} \leq 1.7
+    \end{equation*}
+    From which we note that:
+    \begin{align*}
+        \dfrac{H_{BP}}{H_{BG}} &< 1.2, \text{ $A' = 0$} \\
+        \dfrac{H_{BP}}{H_{BG}} &> 1.7, \text{ $A' = 0.00698$}
+    \end{align*}
+    The terms $H_{BP}$ and $H_{BG}$ are the Brinell hardness of the pinion and gear, respectively. Since we are using steel material, the Brinell hardness of both the pinion and gear are 350 HB as described in the assignment document. \\\\
+    Therefore, the ratio of Brinell hardness is less than 1, from which we obtain that $A' = 0$. Therefore, $C_H = 1$.
+    
+    \item \textbf{2.5.10. Stress-Cycle Factors} ($Y_N$ and $Z_N$): this factor reflects the number of load cycles the gear/pinion can sustain through. From Figures 14-14 and 14-15, we can calculate $Y_N$ and $Z_N$ by the following:
+    \begin{align*}
+        Y_N &= 6.1514 N^{-0.1192} \\
+        Z_N &= 2.466 N^{-0.056}
+    \end{align*}
+    Where N is the number of load cycles, which is a minimum of $2 \times 10^4$ in this case.
+    
+    \item \textbf{2.5.11. Reliability Factor ($K_R$):} this factor accounts for the effect of the statistical distributions of material fatigue failures. The reliability factor is defined as follows:
+    \begin{equation}
+    K_R = 0.658-0.0759\ln{(1-R)}
+    \end{equation}
+    Where $R$ is the reliability factor, out of 1. We determined that a safety factor of 0.98 would be sufficient for our gear system, and thus we obtain a $K_R$ value of 0.955.
+    
+    \item \textbf{2.5.12. Temperature Factor ($K_T$):} this factor reflects the limits of temperature values that can be used for proper stress analysis. Since we assume that our gears/pinions never reach a temperature value higher than $120^\circ$C during operation, $K_T$ = 1.
+    
+    \item \textbf{2.5.13. Rim-Thickness Factor ($K_B$):} this factor represents is the ratio of rim thickness ($t_R$) and tooth height ($h_t$) 
+
+\end{itemize}
 
 \subsection{Safety Factor Analysis}
 To ensure the gear train system maintains an acceptable level of safety (2.2 minimum), bending and contact safety factors were calculated to validate design specifications.
@@ -286,5 +379,10 @@ S_{H(contact)} = \frac{S_c}{\sigma_c}\frac{Z_N C_H}{K_T K_R}
 		\hline
 	\end{tabular}
 \end{center}
+
+\noindent Here we will discuss the relevant formulas, equations, and references utilized to obtain parameter values found in the safety factor equations. Note that all references to table and figure numbers are from Shigley's Mechanical Engineering Design Textbook.
+\begin{equation}
+    
+\end{equation}
 
 \end{document}
