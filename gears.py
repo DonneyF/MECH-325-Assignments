@@ -13,8 +13,12 @@ class Gear:
             # Since the motor is 2500rpm, we need a circumference of the first pinion to be at least 1.289ft
             # Which is not plausible.
     motor_speed = 2500 # RPM
-    motor_torque = 2.5 # Nm
-    motor_torque_imp = 22.13 # Pound-inches
+    raising_torque = 79.5499 # Nm
+    lowering_torque = 32.4104 # Nm
+    motor_torque_raise = 0  # Pound-inches
+    motor_torque_lower = 0  # Pound-inches
+    motor_torque_imp_raise = 0 # Pound-inches
+    motor_torque_imp_lower = 0 # Pound-inches
     R = 0.98 # Reliability factor
     reliability_factor = 0.658 - 0.0759 * math.log(1 - R)
     overload_factor = 1
@@ -22,7 +26,22 @@ class Gear:
     worm_power_screw_ratio = 1.0/9.0
     power_screw_pitch = 6 # In mm
     motor_operation_cost = 0.30 # Dollars per hour
-    stroke_length = 30 * 2 # in cm (raise and lower)
+    stroke_length = 30 # in cm (raise only)
+    worm_efficiency = 0.8034
+    gear_efficiency = 0.94
+
+    # Determines the torque subjected to the motor and updates the internal value
+    def update_torque(self, pinion1, gear1, pinion2, gear2):
+        e = self.train_value(pinion1, gear1, pinion2, gear2)
+        eff = self.worm_efficiency * self.gear_efficiency
+        self.motor_torque_raise = self.raising_torque * e * self.worm_power_screw_ratio / eff
+        self.motor_torque_lower = self.lowering_torque * e * self.worm_power_screw_ratio / eff
+        self.motor_torque_imp_raise = self.raising_torque * e * self.worm_power_screw_ratio * 8.8507457673787 / (.94 * .8) # Convert to pound-inches
+        self.motor_torque_imp_lower = self.lowering_torque * e * self.worm_power_screw_ratio * 8.8507457673787 / (.94 * .8)  # Convert to pound-inches
+
+    def set_speed(self, torque):
+        speed = (torque - 5) * -1000
+        self.motor_speed = speed
 
     # Constructor. Load the file
     def __init__(self):
@@ -38,7 +57,6 @@ class Gear:
     # Update all JSON object fields if it exists
     def update_all(self, key, value):
         for gear in self.gears:
-            print(gear)
             gear[key] = value
 
         with open('A1_Gear_Data.json', 'w') as outfile:
@@ -49,8 +67,9 @@ class Gear:
 
     # Get the costs of the two gears
     def interaction_cost(self, gear1, gear2):
+        if gear1 is None or gear2 is None:
+            return 0
         return gear1["cost"] + gear2["cost"]
-        #return self.get(gear1)["cost"] + self.get(gear2)["cost"]
 
     def geometry_factor_pitting_resistance(self, pinion, gear):
 
@@ -100,6 +119,8 @@ class Gear:
         return Y
 
     def dynamic_factor(self, pinion1, gear1, pinion2, gear2, gear, stage):
+        # Set speed of motor to raise to get max dynamic factor
+        self.set_speed(self.motor_torque_raise)
         diameter = gear["pitch_diameter"]
         V = 0
 
@@ -208,7 +229,7 @@ class Gear:
         return K_s
 
     def tangential_force(self, pinion1, gear1, pinion2, gear2):
-        torque = self.motor_torque_imp
+        torque = self.motor_torque_imp_raise
         force = torque / (pinion1["pitch_diameter"] / 2)
 
         # Calculate the tangential force for the second interaction if they exist
@@ -323,11 +344,16 @@ class Gear:
         S_h = S_c * Z_n * C_h / (K_t * K_r * contact_stress)
         return S_h
 
-    def power_screw_velocity(self, pinion1, gear1, pinion2, gear2):
+    def power_screw_velocity(self, pinion1, gear1, pinion2, gear2, raise_load):
         e = self.train_value(pinion1, gear1, None, None)
 
         if pinion2 is not None and gear2 is not None:
             e = self.train_value(pinion1, gear1, pinion2, gear2)
+
+        if raise_load == 1:
+            self.set_speed(self.motor_torque_raise)
+        else:
+            self.set_speed(self.motor_torque_lower)
 
         omega_motor = self.motor_speed * 2 * math.pi / 60.0
         omega_worm = e * omega_motor
@@ -336,20 +362,27 @@ class Gear:
         return screw_speed # In mm/s
 
     def system_cost(self, pinion1, gear1, pinion2, gear2):
-        speed = self.power_screw_velocity(pinion1, gear1, None, None)
+        material_cost = self.interaction_cost(pinion1, gear1) + self.interaction_cost(pinion2, gear2)
+
+        # Raising cost
+        speed = self.power_screw_velocity(pinion1, gear1, pinion2, gear2, 1)
         seconds_per_stroke = self.stroke_length * 10 / speed
-        cost = self.interaction_cost(pinion1, gear1) + seconds_per_stroke * self.load_cycles / 3600 * self.motor_operation_cost
+        #print("Raising Cycle: {}".format(seconds_per_stroke))
+        operation_cost_raise = seconds_per_stroke * self.load_cycles / 3600 * self.motor_operation_cost
 
-        if pinion2 is not None and gear2 is not None:
-            speed = self.power_screw_velocity(pinion1, gear1, pinion2, gear2)
-            seconds_per_stroke = self.stroke_length * 10 / speed
-            cost = self.interaction_cost(pinion2, gear2) + self.interaction_cost(pinion1, gear1) + seconds_per_stroke * self.load_cycles / 3600 * self.motor_operation_cost
+        # Lowering torque
+        speed = self.power_screw_velocity(pinion1, gear1, pinion2, gear2, 2)
+        seconds_per_stroke = self.stroke_length * 10 / speed
+        #print("Lowering Cycle: {}".format(seconds_per_stroke))
+        operation_cost_lower = seconds_per_stroke * self.load_cycles / 3600 * self.motor_operation_cost
 
-        return cost
+        #print("Material Cost: {}".format(material_cost))
+        return material_cost + operation_cost_raise + operation_cost_lower
 
     # Get the performance metric
     def performance_metric(self, pinion1, gear1, pinion2, gear2):
-        speed = self.power_screw_velocity(pinion1, gear1, pinion2, gear2)
+
+        speed = self.power_screw_velocity(pinion1, gear1, pinion2, gear2, 1)
         cost = self.system_cost(pinion1, gear1, pinion2, gear2)
 
         return speed / cost

@@ -12,6 +12,12 @@ def compute_gear_permutation(pinion1, gear1, pinion2, gear2):
     fail = False
     results = []
 
+    # Set the output speed of the motor when subjected to the raising torque
+    gears.update_torque(pinion1, gear1, pinion2, gear2)
+    gears.set_speed(gears.motor_torque_raise)
+    if gears.motor_speed <= 0:
+        return False
+
     # Compute for the first gear interaction
     for i in range(0, 2):
         bending_stress = gears.bending_stress(pinion1, gear1, None, None, i + 1)
@@ -22,7 +28,6 @@ def compute_gear_permutation(pinion1, gear1, pinion2, gear2):
 
         if safety_factor_contact < 2.2 or safety_factor_bending < 2.2:
             fail = True
-            #print("FAILED")
             break
 
         gear = {
@@ -79,7 +84,8 @@ def compute_gear_permutation(pinion1, gear1, pinion2, gear2):
                          result["contact_stress"], result["safety_factor_contact"]))
             print("====")
 
-        velocity = gears.power_screw_velocity(pinion1, gear1, pinion2, gear2)
+        # Get performance based on raising torque / speed
+        velocity = gears.power_screw_velocity(pinion1, gear1, pinion2, gear2, 1)
         cost = gears.system_cost(pinion1, gear1, pinion2, gear2)
         performance = velocity / cost
 
@@ -114,25 +120,28 @@ def main():
         for combo in two_gear_combos:
             gear1 = gears.get(combo[0])
             gear2 = gears.get(combo[1])
-            e = gears.train_value(gear1, gear2, None, None)
+            if gear1["pitch"] != gear2["pitch"]:
+                continue
 
-            # Minimum train value
-            if e <= 1.0/4.7:
-                permutation = compute_gear_permutation(gear1, gear2, None, None)
-                if permutation is not False: results.append(permutation)
+            if gear1["number"] == "7880K27-2":
+                print("7880K27-2")
+
+            permutation = compute_gear_permutation(gear1, gear2, None, None)
+            if permutation is not False: results.append(permutation)
 
     elif combo == 4:
-        four_gear_combos = itertools.permutations(gear_numbers, 4)
+        # Allow for repeititions using the Cartesian product
+        four_gear_combos = itertools.product(gear_numbers, repeat=4)
         for combo in four_gear_combos:
             gear1 = gears.get(combo[0])
             gear2 = gears.get(combo[1])
             gear3 = gears.get(combo[2])
             gear4 = gears.get(combo[3])
-            e = gears.train_value(gear1, gear2, gear3, gear4)
+            if gear1["pitch"] != gear2["pitch"] or gear3["pitch"] != gear4["pitch"]:
+                continue
 
-            if e <= 1.0/5.0:
-                permutation = compute_gear_permutation(gear1, gear2, gear3, gear4)
-                if permutation is not False: results.append(permutation)
+            permutation = compute_gear_permutation(gear1, gear2, gear3, gear4)
+            if permutation is not False: results.append(permutation)
 
     if log_input in ("y", "Y", 'y', 'Y') and len(results) is not 0:
         log_file.write(json.dumps(results, indent=2))
@@ -140,29 +149,11 @@ def main():
 
     print("Potential Gear Permutations: {}\n".format(len(results)))
 
-    # Get Max Speed
-    speeds = {i["gears"] : i["speed"] for i in results}
-    max_speed = max(speeds.values())
-    speed_combos = [i for i in speeds if speeds[i] == max_speed]
-    print("Maximum Velocity Cobminations: {}\nSpeed: {:.4f}\n".format(speed_combos, max_speed))
-
-    # Get lowest cost
-    costs = {i["gears"] : i["cost"] for i in results}
-    min_cost = min(costs.values())
-    cost_combos = [i for i in costs if costs[i] == min_cost]
-    print("Minimum Cost Cobminations: {}\nCost: {:.2f}\n".format(cost_combos, min_cost))
-
     # Get maximum performance
     performances = {i["gears"] : i["performance"] for i in results}
     max_performance = max(performances.values())
     performance_combos = [i for i in performances if performances[i] == max_performance]
-    print("Maximum Velocity Cobminations: {}\nPerformance Metric: {:.4f}\n".format(performance_combos, max_performance))
-
-    # Check best case scenario: intersecting arrays
-    best = set.intersection(set(speed_combos), set(cost_combos), set(performance_combos))
-    if len(best) > 0:
-        print("Best Gear Trains:")
-        print(best)
+    print("Maximum Velocity Cobminations: {}\nPerformance Metric: {:.4f}".format(performance_combos, max_performance))
 
 if __name__ == "__main__":
     main()
