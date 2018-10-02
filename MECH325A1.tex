@@ -284,7 +284,7 @@ $$\tau_{\text{motor, raise}} = 79.5 (e)(\text{worm-power screw ratio}) / \eta_{\
 $$\tau_{\text{motor, lower}} = 32.41 (e)(\text{worm-power screw ratio}) / \eta_{\text{gearbox}} = 0.95 \text{ Nm}$$
 The worm-power screw ratio is 1/9. From the motor torque-speed curve, $$\text{torque} = -\text{speed}/1000.0+5$$ The raising RPM is 2659 and lowering RPM is 4050 RPM. 
 
-\subsection{Power Screw Speed Calculation}
+\subsection{Power Screw Power/Speed Calculation}
 The raising and lowering speed of power screw is dependent on motor rpm. Given gear train value, $e = 1/5$, 
 $$\omega_{\text{motor}} = \text{rpm} (2\pi/60)$$
 $$\omega_{\text{worm}} = e \omega_{\text{motor}}$$
@@ -295,6 +295,8 @@ We then calculate the power required to raise and lower the load by the followin
 \begin{equation}
     P = T \omega = \dfrac{2\pi \times \text{vertical velocity} \times T}{\text{Pitch}}
 \end{equation}
+
+\noindent The raising power was found to be 492.3 W, and the lowering power is 305.1 W.
 \subsection{Bending \& Contact Stress Analysis}
 
 Detailed stress analysis was performed on each gear and pinion considered for the design of the gear train. Major stress factors were determined to come from the bending and contact stresses exerted on the gear/pinion system during meshing. The following equation was used calculate and verify the allowable bending stress:
