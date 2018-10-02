@@ -21,7 +21,7 @@ class Gear:
     motor_torque_imp_lower = 0 # Pound-inches
     R = 0.98 # Reliability factor
     reliability_factor = 0.658 - 0.0759 * math.log(1 - R)
-    overload_factor = 1
+    overload_factor = 1.25
     temperature_factor = 1
     worm_power_screw_ratio = 1.0/9.0
     power_screw_pitch = 6 # In mm

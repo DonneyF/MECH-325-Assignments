@@ -1,9 +1,7 @@
 from gears import Gear
 import itertools
 import datetime
-import sys
 import json
-import operator
 
 gears = Gear()
 
@@ -122,9 +120,6 @@ def main():
             gear2 = gears.get(combo[1])
             if gear1["pitch"] != gear2["pitch"]:
                 continue
-
-            if gear1["number"] == "7880K27-2":
-                print("7880K27-2")
 
             permutation = compute_gear_permutation(gear1, gear2, None, None)
             if permutation is not False: results.append(permutation)
