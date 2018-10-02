@@ -368,12 +368,14 @@ class Gear:
         speed = self.power_screw_velocity(pinion1, gear1, pinion2, gear2, 1)
         seconds_per_stroke = self.stroke_length * 10 / speed
         #print("Raising Cycle: {}".format(seconds_per_stroke))
+        #print("Raising speed: {}".format(speed))
         operation_cost_raise = seconds_per_stroke * self.load_cycles / 3600 * self.motor_operation_cost
 
         # Lowering torque
         speed = self.power_screw_velocity(pinion1, gear1, pinion2, gear2, 2)
         seconds_per_stroke = self.stroke_length * 10 / speed
         #print("Lowering Cycle: {}".format(seconds_per_stroke))
+        #print("Lowering speed: {}".format(speed))
         operation_cost_lower = seconds_per_stroke * self.load_cycles / 3600 * self.motor_operation_cost
 
         #print("Material Cost: {}".format(material_cost))
