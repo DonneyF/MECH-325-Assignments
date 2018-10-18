@@ -76,7 +76,7 @@ This document presents the design process of a roller chain drive system with be
 \begin{center}
 	\begin{tabular}{ |p{3cm}||p{2cm}|p{2cm}|p{7cm}|  }
 		\hline
-		 & Cost (\$) & Gear Ratio & Description \\
+		 & Cost (\$) & Teeth Ratio & Description \\
 		\hline
 		M-I Sprocket 1* &20.33 & 5.65 & 6280K553 \\
 		M-I Sprocket 2 &141.83 & - & 2737T961 \\
@@ -97,14 +97,13 @@ This document presents the design process of a roller chain drive system with be
 		\hline
 	\end{tabular}
 \end{center}
-\noindent Note: *M-I: Motor to Intermediate Shaft, **I-D: Intermediate to Drum Shaft
+\noindent Note: *M-I: Motor to Intermediate Shaft, **I-D: Intermediate to Drum Shaft. Furthermore, the life of our drive train was found to be 15,000 hours, as detailed in section 2.2.5.
 \subsection{Approach \& Methods}
-We focused primarily on the reliability for this system while also optimizing cost. It was important for our team to ensure that our proposed design would be mechanically sound for this operation. \\\\
-Design decisions for the roller chain were made by following the proposed structure:
+We focused primarily on the reliability for this system while also optimizing cost. It was important for our team to ensure that our proposed design would be mechanically sound for this operation. Design decisions for the roller chain were made by following the proposed structure:
 \begin{enumerate}
     \itemsep0em
     \item Identification of the \textbf{Service Classification} of the ClumpBuster-2000. In this application it was decided that the operation would fall under "Moderate Shock Load".
-    \item Identification of the \textbf{Service Factor}. The corresponding service factor for Moderate Shock Load was found to be 1.3 in \textbf{\textit{Martin's Sprocket Engineering Data}} catalogue. 
+    \item Identification of the \textbf{Service Factor}.
     \item Determination of \textbf{Design Horsepower}.
     \item Selection of \textbf{Drive Selection}. Viable pitch chains were selected from McMaster-Carr using the calculated design horsepower and the required operational speeds.
     \item Selection of \textbf{Sprockets}. Following the recommendation in the catalogue, sprockets satisfying the design requirements for the system were found and bought from McMaster-Carr.
@@ -113,10 +112,11 @@ Design decisions for the roller chain were made by following the proposed struct
 \noindent The following assumptions were made in the design of the roller chain system:
 \begin{itemize}
     \itemsep0em
-    \item Chordal speed variations are negligible since we are using 17 teeth sprockets.
+    \item Chordal speed variations can be negligible since we are using 17 teeth sprockets.
     \item Roller chain noise level does not conflict with the requirement for minimizing the plant's ambient noise as there also exists candy polishing noise.
     \item Since the driving sprocket has 17 teeth for our design, the system will be classified under "smooth rolling" as referenced in \textbf{\textit{Martin's Sprocket Engineering Data}}. Therefore, the Service Factor ($K_s$) of each roller chain system is 1.3.
     \item Since the design horsepower at the required RPM of the system is \textbf{less} than the horsepower rating of the largest pitch chain for the desired speed, a single-strand chain drive may be used.
+    \item We can machine down the shaft from 1.5 inches to 1 inch.
     \item Following Shigley's recommendation, we aimed to keep our velocity ratio below 6:1.
     \item A final speed of 120.4 rpm, a 0.33\% difference from required speed is acceptable.
     \item Adding an intermediate shaft will not change the loading conditions.
@@ -125,10 +125,10 @@ Design decisions for the roller chain were made by following the proposed struct
 
 \subsection{Chain System Overview}
 Below is an overview diagram of the designed 2-stage roller chain drive system. One chain system transmits the torque from motor shaft to the intermediate shaft, which then has a second separate roller chain system which transmits torque from the intermediate shaft to the drum shaft. At each stage, there is a gear reduction ratio in order to reduce the 1200 RPM speed of the motor to 120 RPM which will be applied to the drum shaft.
-\begin{figure*}[!ht]
-\includegraphics[width=16cm]{MECH325A1System}
-\caption{Roller Chain, Sprocket, and Shaft Layout}
-\end{figure*}
+\begin{center}
+\includegraphics[width=13cm]{MECH325A2System.jpg} \\
+Roller Chain, Sprocket, and Shaft Layout
+\end{center}
 
 \newpage
 
@@ -139,7 +139,7 @@ $$30 \times 40 = 1200 \text{ RPM}$$
 Since the desired RPM of the shaft is 120 RPM, the reduction required is 10:1.
 
 \subsection{Roller Chain Selection}
-The guiding procedure for roller chain selection is outlined by \cite{martin}. When determining the type of chain and sprocket to use in the system, the following parameters were consider to check and justify design decisions.
+The guiding procedure for roller chain selection is outlined by \cite{martin}. When determining the type of chain and sprocket to use in the system, the following parameters were consider to check and justify design decisions. Throughout this analysis we will use "M-I" to indicate Motor to Intermediate Shaft drive and "I-D" for the Intermediate to Drum Shaft drive.
 
 \subsubsection{Service Factor $\bm{K_s}$}
 The service factor is identified by Table II of \cite{martin}. Due to the assumption stated in the summary that an intermediate shaft would not change loading conditions, we select the service factor $K_s$ to be 1.3.
@@ -207,7 +207,7 @@ where
 \begin{equation}
     H_a = K_1 K_2 H_{\text{tab}}
 \end{equation}
-Then we find $n_{fs}$ = 2.53 for the first stage and $n_{fs}$ = 3.49, which are both greater than the minimum safety factor of 2.5. Therefore the selected sprockets satisfy the power and safety factor requirement.
+Then we find $n_{fs}$ = 2.53 for the first stage and $n_{fs}$ = 3.49 for the second, which are both greater than the minimum safety factor of 2.5. Therefore the selected sprockets satisfy the power and safety factor requirement.
 
 \paragraph{Additional Information}
 \begin{itemize}
@@ -225,13 +225,13 @@ When choosing the sprockets, we followed these requirements:
 \begin{itemize}
     \itemsep0em
     \item A minimum teeth of 17 to minimize chordal speed variation and cost.
-    \item A pair of sprockets that matched a proper speed reduction.
+    \item A pair of sprockets that matched the specified speed reduction.
     \item A speed reduction no greater than 6 as recommended by Shigley.
     \item A pitch that supports at least the tabulated horsepower chosen.
     \item A sufficient speed reduction in the first stage to allow for cheaper lubrication in the second.
     \item An odd number of teeth on the driving sprocket and an even number of teeth on the driven sprocket to avoid a special link.
 \end{itemize}
-We also note that the design horsepower was less than horsepower rating of the largest pitch chain, so a single-strand chain was selected. With these in mind, we find a set of sprockets meeting the requirements.
+We also note that the design horsepower was less than the horsepower rating of the largest pitch chain, so a single-strand chain was selected. With these in mind, we find a set of sprockets meeting the requirements.
 \begin{center}
 	\begin{tabular}{|p{4cm}|p{1.5cm}|p{1.5cm}| }
 		\hline
@@ -247,15 +247,15 @@ We also note that the design horsepower was less than horsepower rating of the l
 \end{center}
 
 \subsubsection{Chain Length \& Center-Center Distance}
-The chain length per pitch is given by:
+The chain length per pitch is approximated by:
 \begin{equation}
 \frac{L}{p} \approx \frac{2C}{p} + \frac{N_1 + N_2}{2} + \frac{(N_2 - N_1)^2}{4 \pi^2 C/p}
 \end{equation}
-Where
+where
 \begin{equation}
     C = \frac{p}{4}\left[-A + \sqrt{A^2 - 8\left(\frac{N_2 - N_1}{2 \pi}\right)}\right]
 \end{equation}
-And
+and
 \begin{equation}
     A = \frac{N_1 + N_2}{2} - \frac{L}{p}
 \end{equation}
@@ -275,13 +275,14 @@ We obtain the following values:
 		& M-I & I-D \\
 		\hline
 		Center-Center Distance & 15.57 in & 7.59 in\\
-		Chain Length & 62 in & 34.5 in\\
+		Chain Length & 23 in & 34.5 in\\
+		Price / Foot (\$/ft) & 4.4 & 7.78\\
 		\hline
 	\end{tabular}
 \end{center}
 
 \subsubsection{Life \& Replacement}
-From Shigley Chapter 17-5, we approximate the roller chain life expectancy of 15,000 hours. The polishing machine operates 16 hours per day for 250 days per year for four years. The total operational hours is then 16,000 hours. This requires at least one chain replacement per stage, for a cost of \$200 with an additional parts cost. Roller chains are relatively easy to replace which satisfies the maintenance requirement of the system. 
+From Shigley Chapter 17-5, we approximate the roller chain life expectancy of 15,000 hours. The polishing machine operates 16 hours per day for 250 days per year for four years. The total operational hours is then 16,000 hours. This requires at least one chain replacement per stage, giving a maintenance cost of \$200 with an additional parts cost. Roller chains are relatively easy to replace which satisfies the maintenance requirement of the system. 
 
 \subsection{Alternate Systems Analysis}
 We analyzed both flat and V-belt flexible drive systems in addition to roller chains to assess the best design choice. This section details the reasons we moved away from the following designs. 
@@ -306,7 +307,7 @@ Flat belts systems are characterized by low operating noise but also  expensive 
 	\end{tabular}
 \end{center}
 
-\noindent The pulleys alone would elevate the cost of the system to \$814.17 which means if we factor in cost of belts and additional pulleys for a multi-stage system, the cost would be even higher. Therefore we chose to explore other designs.
+\noindent The pulleys alone would elevate the cost of the system to \$814.17 which means if we factor in cost of belts and additional pulleys for a multi-stage system, the cost would be even higher.
 
 \subsubsection{V-Belt Analysis}
 We performed calculations for the V-Belt system and found the following parameters to be unsuitable. Given sheaves of 3 inch and 30 inch diameter, and a center-to-center distance range of 10 to 30 inches, we compute the pulley speed as follows:
@@ -317,7 +318,7 @@ $$V = \pi(3)(1200)/12 = 942 \text{ ft/min}$$
 This is below the recommended 1000 - 5000 operating speed shown in \textbf{\textit{Shigley's Mechanical Engineering Design}} table 17-12. Consequently, we cannot design a two stage system since a single stage already decreases the belt speed to below the recommended limit. 
 We compute the center-to-center distance:
 \begin{equation}
-    C = 0.25 \left(\left[L_p - \frac{\pi(D+d)}{2}\right]+\sqrt{\left[L_p - \frac{\pi(D+d)}{2}\right]^2-2(D-d)^2}\right)
+    C = 0.25 \left(\left[L_p - \frac{\pi(D+d)}{2}\right]+\sqrt{\left[L_p - \frac{\pi(D+d)}{2}\right]^2-2(D-d)^2}\,\right)
 \end{equation}
 
 \begin{center}
@@ -364,10 +365,10 @@ Where $F_S$ is the tension in the roller chain, $R_S$ is the radius of the sproc
 		\hline
 		M-I Sprocket 1 & 35.27 & 142.40 & 49.01 \\
 		M-I Sprocket 2 & 195.29 & 142.40 & 27.80 \\
-		M-I Chain & N/A & 142.40 & N/A \\
+		M-I Chain & - & 142.40 & - \\
 		I-D Sprocket 1 & 52.27 & 532.12 & 27.80 \\
 		I-D Sprocket 2 & 92.02 & 532.12 & 49.01 \\
-		I-D Chain & N/A & 532.12 & N/A \\
+		I-D Chain & - & 532.12 & - \\
 		\hline
 	\end{tabular}
 \end{center}
@@ -375,12 +376,12 @@ Where $F_S$ is the tension in the roller chain, $R_S$ is the radius of the sproc
 \subsubsection{Placement Locations}
 Using our torque calculations we are now able to find the optimal locations to place bearings on the intermediate and drum shaft (we assume we do not have to consider the motor shaft). We placed bearings such that the maximum bending moment would be minimized.\\\\
 For the intermediate shaft, we first observe the following diagram:
-\begin{figure*}[!ht]
-\includegraphics[width=16cm]{MECH325A1System}
-\caption{Intermediate Shaft Bearing Locations}
-\end{figure*}
+\begin{center}
+\includegraphics[width=7cm]{MECH325AIdler.jpg} \\
+Intermediate Shaft Bearing Locations
+\end{center}
 
-\noindent The values of $F_1$ and $F_2$ are known, as we have already calculated them above. Note that $F_1$ is the tension force of the M-I Chain and $F_2$ is the tension force of the I-D Chain. We then calculate the optimal positions by:
+\noindent The values of $F_1$ and $F_2$ are known, as we have already calculated them above. Note that $F_1$ is the tension force of the M-I Chain (Right Sprocket) and $F_2$ is the tension force of the I-D Chain (Left Sprocket). We then calculate the optimal positions by:
 \begin{align*}
     F_1x &= F_2z \\
     F_1x &= F_2(12-x-2y-1.21875) \\
@@ -389,16 +390,16 @@ For the intermediate shaft, we first observe the following diagram:
 \end{align*}
 To minimize bending and shear, we want $x$ to be close to $y$. Graphing this we see that $y=1.75''$ gives $x=1.53''$ which is sufficiently close. We then place two bearings on the ends of the shaft and one in the position $x$ we calculated above to minimize stresses. \\\\
 For the drum shaft, we observe the following diagram:
-\begin{figure*}[!ht]
-\includegraphics[width=16cm]{MECH325A1System}
-\caption{Motor Shaft Bearing Locations}
-\end{figure*}
+\begin{center}
+\includegraphics[width=10cm]{MECH325ADrum.jpg} \\
+Drum Shaft Bearing Locations
+\end{center}
 
 \noindent We know that the ideal location to place the sprocket on this shaft would be in the middle, at $6''$ from the end as we only have one sprocket on this shaft. We then place a bearing at $x=0$ and \textbf{two} bearings on the other end. We see that there will be a load applied on this end of the shaft, which can be found by:
 \begin{equation*}
-    W = 150\cos(30)
+    W = 150\cos(30^{\circ})
 \end{equation*}
-Where the load 150 lb was is the summation of the drum and candy weight. Therefore, we place two bearing on this end as this point would have to account for the stresses created by both the drum, candy, and sprocket loads.
+Where the load 150 lb was is the summation of the drum and candy weight and the $30^{\circ}$ comes from the orientation of the system. Therefore, we place two bearing on this end as this point would have to account for the stresses created by both the drum, candy, and sprocket loads.
 
 \begin{thebibliography}{9}
 \bibitem{shigley}
