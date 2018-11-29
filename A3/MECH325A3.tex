@@ -135,13 +135,13 @@ Below is an side-profile overview of the completed ClumpBuster-2000 System, with
 \begin{figure}[!h]
 \centering
   \begin{subfigure}[b]{0.45\textwidth}
-    \includegraphics[width=8cm]{A3/shaft_drawing.png}
+    \includegraphics[width=8cm]{A3/shaft_drawing2.png}
     \caption{Shaft Accessories Design}
     \label{fig:1}
   \end{subfigure}
   %
   \begin{subfigure}[b]{0.45\textwidth}
-    \includegraphics[width=8cm]{A3/mount_drawing.png}
+    \includegraphics[width=7cm]{A3/mount_drawing.png}
     \caption{Motor Mount Design}
     \label{fig:2}
   \end{subfigure}
@@ -158,7 +158,7 @@ The sprocket on the upper shaft has a 34.93 mm bore width. We chose to purchase 
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=10cm]{A3/MECH325A3FBD.jpg}
+    \includegraphics[width=12cm]{A3/MECH325A3FBD.jpg}
     \caption{Upper shaft free body diagram}
 \end{figure}
     
@@ -178,7 +178,7 @@ Balance moments and forces in $x$ and $y$ directions,
 \noindent We choose to maximize the distance $x$ (distance of sprocket from the the bearing at $A$) to minimize $R_1$ and $R_2$. Letting $x = 10$ inches, we solve simultaneously and we have our results below in terms of magnitudes:
 
 \begin{center}
-	\begin{tabular}{ |p{1.5cm}||p{1.5cm}|p{2cm}|p{7cm}|  }
+	\begin{tabular}{ |p{1.5cm}||p{1.5cm}|p{2cm}|p{8cm}|  }
 		\hline
 		Symbol & Value & Units & Description\\
 		\hline
@@ -198,7 +198,7 @@ Balance moments and forces in $x$ and $y$ directions,
 		$x$ & 10 & in  & distance from left end to sprocket \\
 		\hline
 		$R_1$ & 351.91 & lbf  & reaction at left bearing\\
-		$R_2$ & 97.98 & lbf  & reaction at right bearing\\
+		$R_2$ & 97.98 & lbf  & reaction at right bearing (opposite direction)\\
 		\hline
 	\end{tabular}
 \end{center}
@@ -335,13 +335,12 @@ With this more accurate value of $K_f$, our results are summarized below:
 \noindent We find both safety factors to be well above the desired value of 2.50. This affirms our initial choice of using a 30 mm bore for the bearing. Our assumption of a shoulder fillet radius of 1 mm was also found to be accessible. More in-depth bearing analysis is performed in section 2.4.
 
 \subsection{Bearing Selection}
-\noindent The M-I sprocket 1 has an inner diameter of 1" (25.4 mm). Using Table 11-2 in Shigley's, we chose a Single-Row 02-Series deep groove ball bearing with shoulder diameter, $d_s = 25mm$ and the bore diameter 20 mm.
+We had earlier assumed a shaft diameter of 34.9 mm, and will select bearings with bore diameters below this value. This section involves ensuring our bearings are reliable during the 16000 hours of operation.
 
 \subsubsection{Thrust Bearing Reliability Calculations}
-To validate our bearing we must determine its $C_{10}$ bearing life.\\ \\
-The ball bearing at $C$ involves a thrust component. This selection procedure requires an iterative procedure. Assuming $F _ { a } / \left( V F _ { r } \right) > e$ \\ \\
-As a first approximation, take the middle entry from Table $11 - 1 :$ \\
+To validate our bearing at location $b$ (Figure 2), we must determine its $C_{10}$ bearing life. The deep groove ball bearing at $b$ (Figure 2) involves a thrust component. This selection procedure requires an iterative procedure. We initially assume $F _ { a } / ( V F _ { r }) > e$ and as an approximation, we take the middle entry from Table 11-1 from \cite{shigley}:
 
+\begin{center}
 \begin{tabular}{ |p{1.5cm}||p{1.2cm}|p{2cm}|p{7cm}|  }
 		\hline
 		Symbol & Value & Units & Description\\
@@ -354,6 +353,7 @@ As a first approximation, take the middle entry from Table $11 - 1 :$ \\
 	    
 	    \hline
 \end{tabular}
+\end{center}
 
 %	
 % $F _ { r } :  \mathrm { lbf }$\\
@@ -362,17 +362,18 @@ As a first approximation, take the middle entry from Table $11 - 1 :$ \\
 % $X _ { 2 } = 0.56$\\
 % $Y _ { 2 }  = 1.63$\\
 
-\noindent We can then use this to calculate a tentative $F_e$ value.
-\begin{equation}
-F _ { e } = X _ { i } V F _ { r } + Y _ { i } F _ { a } = ( 0.56 ) ( 1 )( 0.476 ) + 1.63 ( 0.345 ) = 0.829 \mathrm{kN} \tag{Equation: 11-2}
-\end{equation}
-Next, we can use this to calculate a $C_{10}$ required for our bearing.
+We can then use this to calculate a tentative $F_e$ value using Eqn 11-2 from \cite{shigley}.
+\begin{equation*}
+F _ { e } = X _ { i } V F _ { r } + Y _ { i } F _ { a } = ( 0.56 ) ( 1 )( 0.476 ) + 1.63 ( 0.345 ) = 0.829 \text{ kN}
+\end{equation*}
+\noindent Next, we can use this to calculate a $C_{10}$ required for our bearing. We assume an application factor of 2.25 due to the relatively high shock loads on the drum shaft.
 
-\begin{tabular}{ |p{1.5cm}||p{1.2cm}|p{2cm}|p{7cm}|  }
+\begin{center}
+\begin{tabular}{ |p{1.5cm}||p{1.2cm}|p{2cm}|p{8cm}|  }
 		\hline
 		Symbol & Value & Units & Description\\
 		\hline
-		$a$ & 3 & - & $a = 3$ for ball bearings. $a = 10 / 3$ for roller bearings (cylindrical and tapered roller) \\
+		$a$ & 3 & - & $a = 3$ for ball bearings. $a = 10 / 3$ for cylindrical roller bearings \\
         $b$ & 1.483 & -  & Shape parameter that controls the skewness.\\			
 	    $x_0$ & 0.02 & -  & Guaranteed, or "minimum," value of $x$\\
 	    $\theta - x _ { 0 }$ & 4.439 & -  & Characteristic parameter.\\
@@ -381,7 +382,8 @@ Next, we can use this to calculate a $C_{10}$ required for our bearing.
 	    $R _ { D }$ & 0.95 & -  & Reliablity\\
 
 	    \hline
-\end{tabular}\\ \\
+\end{tabular}
+\end{center}
 %
 %$a_f = 3$ \\
 %$b = 1.483$\\ 
@@ -393,72 +395,62 @@ Next, we can use this to calculate a $C_{10}$ required for our bearing.
 The dimensionless design life for both bearings is
 
 \begin{equation}
-x _ { D } = \frac { L _ { D } } { L _ { R } } = \frac { 60 ( 16000 ) 120 } { 10 ^ { 6 } } = 115.2 \notag
+x _ { D } = \frac { L _ { D } } { L _ { 10 } } = \frac { 60 ( 16000 \text{ hours}) (120 \text{ rpm})} { 10 ^ { 6 } } = 115.2 \notag
 \end{equation}
+We then calculate $C_{10}$ using Eqn 11-7:
+\begin{align*}
+   C _ { 10 } &= a _ { f } F _ { D } \left[ \frac { x _ { D } } { x _ { 0 } + \left( \theta - x _ { 0 } \right) \left[ \ln \left( 1 / R _ { D } \right) \right] ^ { 1 / b } } \right] ^ { 1 / a }\\
+   &= ( 3 ) ( 0.829 ) \left[ \frac { 115.2 } { 0.02 + 4.439 ( 1 - 0.95 ) ^ { 1 / 1.483 } } \right] ^ { 1 / 3 }\\
+   &= 10.708 \text { kN} 
+\end{align*}
+\noindent From Table 11-2, deep-groove ball bearing 02-30 mm has $C _ { 10 } = 19.5 \mathrm { kN }$ with $ C _ { 0 } = 10.0$ kN. This bearing can withstand the $C_{10}$ we are applying to and is the same diameter as our shaft, so we select this bearing and re-verify.
 
-\begin{align}
-    \tag{Equation: 11-7}
-   C _ { 10 } &= a _ { f } F _ { D } \left[ \frac { x _ { D } } { x _ { 0 } + \left( \theta - x _ { 0 } \right) \left[ \ln \left( 1 / R _ { D } \right) \right] ^ { 1 / b } } \right] ^ { 1 / a }\\ \notag
-   &= ( 3 ) ( 0.829 ) \left[ \frac { 115.2 } { 0.02 + 4.439 ( 1 - 0.95 ) ^ { 1 / 1.483 } } \right] ^ { 1 / 3 }\\ \notag
-   &= 10.708 \mathrm { kN } 
-\end{align}
-\noindent From Table $11 - 2 ,$ deep-groove ball bearing $02 - 30 \mathrm { mm }$ has $C _ { 10 } = 19.5 \mathrm { kN } . C _ { 0 }$ is 10.0$\mathrm { kN }$. This bearing can withstand the $C_{10}$ we are applying to and is the same diameter as our shaft. \\
-
-\noindent Next, we can use $F _ { a } / C _ { 0 }$ enter Table $11 - 1$ to obtain a new value of $Y _ { 2 }$. \\ 
-\begin{equation}
+\noindent Next, we can use $F _ { a } / C _ { 0 }$ from Table 11-1 to obtain a new value of $Y _ { 2 }$.
+\begin{equation*}
 \notag
 \frac { F _a } { C _ { 0 } } = \frac { 0.345 } { 10 } = 0.0345 \implies e = 0.23
-\end{equation}
+\end{equation*}
 
 \noindent We can determine $e$ from Table $11 - 1$ to be approximately $0.22 .$ \\
-\begin{equation}
-\frac { F a } { V F _ { r } } = 0.7248 > e
-\end{equation}
+\begin{equation*}
+\frac { F_a } { V F _ { r } } = 0.7248 > e
+\end{equation*}
 
-\noindent Now since 0.7248 is greater than 0.23 we can find $Y _ { 2 }$ by interpolation. \\
-\begin{equation}
-    Y_2 = 1.92
-\end{equation}
+\noindent Now since 0.7248 is greater than 0.23 we can find $Y _ { 2 }$ by interpolation as $Y_2 = 1.92$. Using our new $Y_2$ we can determine our update accurate $F_e$.
 
-\noindent Using our new $Y_2$ we can determine our update accurate $F_e$.
-
-\begin{equation}
-F_e = 0.56 ( 1 )( 0.476 ) + 1.98( 0.345 ) = 0.929 \mathrm{kN}
-\end{equation}
+\begin{equation*}
+F_e = 0.56 ( 1 )( 0.476 ) + 1.98( 0.345 ) = 0.929 \text{ kN}
+\end{equation*}
 
 \noindent Using our $F_e$ we can calculate our updated $C_{10}$
 
-\begin{equation}
-    C _ { 10 } = 12.00 \mathrm { kN }
-\end{equation}
+\begin{equation*}
+    C _ { 10 } = 12.00 \text{ kN}
+\end{equation*}
 
-\noindent Since we can still use bearing 02-30 our iteration is complete and we are confident in our bearing selection.
+\noindent Since we can still use the 02-30 bearing our iteration is complete and we are confident in our bearing selection.
 
 \subsubsection{Cylindrical Roller Bearing Reliability Calculations}
 
-The absence of a thrust component makes the selection procedure simple. We simply calculate the required $C_{10}$ and choose a bearing that matches the criteria. Most of the parameters are the same as the previous. For this bearing, however, the $F_D = 1.605 \mathrm{kN}$ and $a = 3/10$. We opted to choose a cylindrical roller bearing because of the dominant radial loads. \\
+The absence of a thrust component at location $a$ (Figure 2) makes the selection procedure simple. We simply calculate the required $C_{10}$ and choose a bearing that matches the criteria. Most of the parameters are the same as the previous. For this bearing, however, the $F_D = 1.605 \text{ kN}$ and $a = 3/10$. We opted to choose a cylindrical roller bearing because of the dominant radial loads.
+\begin{equation*}
+C _ { 10 }  = ( 2.25 ) ( 1.605 ) \left[ \frac { 115.2 } { 0.02 + 4.439 ( 1 - 0.95 ) ^ { 1 / 1.483 } } \right] ^ { 3/10 } = 17.41 \text{ kN}
+\end{equation*}
 
-\begin{equation}
-    \notag
-C _ { 10 } = a _ { f } F _ { D } \left[ \frac { x _ { D } } { x _ { 0 } + \left( \theta - x _ { 0 } \right) \left[ \ln \left( 1 / R _ { D } \right) \right] ^ { 1 / b } } \right] ^ { 1 / a } = ( 2.25 ) ( 1.605 ) \left[ \frac { 115.2 } { 0.02 + 4.439 ( 1 - 0.95 ) ^ { 1 / 1.483 } } \right] ^ { 10 / 3 } = 17.41 \mathrm { kN } \\ 
-\end{equation}
-
-\noindent From Table $11 - 3 ,$ cylindrical roller bearing $02 - 30 \mathrm { mm }$ has $C _ { 10 } = 22.4 \mathrm { kN }$. This bearing can withstand the $C_{10}$ we are applying to and is the same diameter as our shaft. \\
+\noindent From Table 11-,3 cylindrical roller bearing 02-30 has $C _ { 10 } = 22.4 \text{ kN}$. This bearing can withstand the $C_{10}$ we are applying to and is the same diameter as our shaft. Therefore this cylindrical roller bearing is acceptable and will be able to handle the loads.
 
 \subsubsection{Bearing Costs}
 
 There are two bearings on the drum shaft, both of a 30 mm bore. The cost is calculated by
-\begin{equation}
+\begin{equation*}
     \text{Cost} = \$20 + \$2(\text{Bore Diameter} - 10 \text{ mm})
-\end{equation}
-With two bearings, the total cost is \$120.00
+\end{equation*}
+Then our total cost is \$120.00
 
 \subsection{Shaft Accessories Selection}
 
 \subsubsection{Retaining Rings}
-We make the use of retaining rings at the bearing furthest away from the drum as well as on the motor shaft.\\
-
-\noindent From our selected bearings, we select appropriate retaining rings from some supplier \cite{rr} for the local shaft diameters:
+We make the use of retaining rings at the bearing furthest away from the drum as well as on the motor shaft. From our selected bearings, we select appropriate retaining rings from some supplier \cite{rr} for the local shaft diameters:
 
 \begin{center}
 	\begin{tabular}{|p{1.5cm} |p{4cm}||p{1.5cm}|p{1.5cm}|  }
@@ -486,9 +478,9 @@ We make the use of retaining rings at the bearing furthest away from the drum as
 \textbf{Costs}
 \\
 The cost of machining retaining grooves for a local shaft diameter $d$ in mm is
-\begin{equation}
+\begin{equation*}
     \text{Retaining Ring Groove Cost} = \$10 + \$0.50(d - 10\text{mm})
-\end{equation}
+\end{equation*}
 For the single retaining ring groove on the drum shaft, its cost is \$20
 
 \subsubsection{Setscrews}
@@ -571,7 +563,7 @@ To calculate the fraction of external load on the bolts, C, we first found the s
 
 \begin{align*}
     k _ { b } &= \dfrac { A _ { d } A _ { t } E } { A _ { d } l _ { t } + A _ { t } l _ { d } }
-    = 12.325 \text{ Mlbf/in} 
+    = 12.325 \text{ M lbf/in} 
 \end{align*}
 
 \noindent For the member configuration we note that all the components (washer, top/bottom plate) are made of steel in our system. Therefore, we can calculate the stiffness factor by the following equation:
